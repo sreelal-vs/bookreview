@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const readingstatusSchema = mongoose.Schema({
+const readingstatusSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
