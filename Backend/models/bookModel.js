@@ -1,34 +1,34 @@
 const mongoose = require("mongoose");
 
 
-const bookSchema = mongoose.Schema({
+const bookSchema = new mongoose.Schema({
     openLibraryid:{
         type:String,
         unique:true,
-        required:true
+        required:[true, "id not found"]
     },
     title:{
         type:String,
         index:true,
-        required:true
+        required:[true,"title not found"]
     },
     author:{
         type:String,
         index:true,
-        required:true
+        required:[true,"author name not found"]
     },
     coverpic:{
         type:String,
-        required:true
+        required:[true,"cover picture not found"]
     },
     description:{
         type:String,
-        required:true
+        required:[true,"not content for description is found"]
     },
     avgrating:{
         type:Number,
         max:5,
-        required:true
+        required:[true,"average rating not found"]
     }
 })
 
