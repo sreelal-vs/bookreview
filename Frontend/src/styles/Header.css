@@ -1,0 +1,139 @@
+.custom-toggle {
+  padding: 2px 5px 2px 5px;
+  border-radius: 10px !important;
+
+}
+
+.navbar-toggler:focus {
+  box-shadow: var(--shadow);
+}
+
+.custom-toggle .navbar-toggler-icon {
+  width: 25px;
+  height: 25px;
+
+}
+
+.custom-btn {
+  height: 40px;
+  justify-self: center;
+  font-family: var(--heading);
+  background-color: var(--accent);
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.custom-btn:active {
+  background-color: var(--accent) !important;
+}
+
+.custom-btn:hover {
+  background-color: var(--accent);
+  opacity: 0.9;
+  transition: all ease 0.5s;
+}
+
+.brand-name {
+  font-family: var(--sans);
+  font-weight: 600;
+}
+
+.inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 15px;
+}
+
+@media (max-width: 992px) {
+
+  .showborder {
+
+    box-shadow: var(--shadow);
+    margin: 2px 0;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: var(--primary);
+
+  }
+
+  .searchwrapper {
+    width: 100%;
+
+    padding: 0 12px;
+    position: absolute;
+    left: 0px;
+    max-width: 0;
+    opacity: 0;
+
+    transition: all .3s ease;
+  }
+
+  .searchwrapper.active {
+    max-width: 100%;
+    opacity: 1;
+  }
+}
+
+.noborder {
+  position: relative;
+}
+
+.noborder:before {
+  position: absolute;
+  content: "";
+  height: 1.8px;
+  width: 0%;
+  left: 0%;
+  bottom: 22%;
+  background-color: black;
+  transition: width 0.3s ease;
+}
+
+.noborder:hover:before {
+
+  width: 100%;
+
+}
+
+.search-results {
+  border-radius: 0;
+  width: 100%;
+  box-shadow: var(--shadow);
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all ease 0.3s;
+}
+
+.search-results.show {
+  position: absolute;
+  border-radius: 5px;
+  transform: translateY(0);
+  opacity: 1;
+
+
+}
+
+.searchwrapper .form-control {
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+  border-width: 1.6px;
+  border-radius: 5px;
+}
+
+.searchwrapper .form-control:focus {
+  border-color: var(--primary);
+
+}
+
+.searchwrapper .result-items {
+
+  border-style: solid;
+  border-color: var(--primary);
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-right-width: 2px;
+
+}
