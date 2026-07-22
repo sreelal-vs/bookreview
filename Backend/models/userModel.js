@@ -18,9 +18,14 @@ const userSchema = new mongoose.Schema({
         required:[true,"please enter  password"],
         select:false
     },
+    profilePic:{
+        type:String,
+        required:false
+    },
     role:{
         type:String,
         enum:["user","admin"],
+        default:"user"
         
     },
     isBanned:{
@@ -30,14 +35,14 @@ const userSchema = new mongoose.Schema({
 
 })
 
-
+userSchema.pre("save",async function () {
+    if(!this.isModified("password")) return
+    this.password = await bcrypt.hash(this.password,10);
+    
+})
 const User = mongoose.model('user',userSchema);
 
-userSchema.pre("save",async function (next) {
-    if(!this.isModified("password"))return next();
-    this.password = await bcrypt.hash(this.password,10);
-    next();
-})
+
 module.exports = User;
 
 

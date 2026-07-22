@@ -11,13 +11,12 @@ const commentSchema = new mongoose.Schema({
         ref:"Review",
         required:true
     },
-    books:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Book"
-    }],
+    comment:{
+        
+    },
     isPublic:{
         type:Boolean,
-        default:false
+        default:true
     }
 })
 

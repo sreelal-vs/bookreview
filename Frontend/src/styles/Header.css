@@ -108,6 +108,7 @@
 }
 
 .search-results.show {
+  
   position: absolute;
   border-radius: 5px;
   transform: translateY(0);

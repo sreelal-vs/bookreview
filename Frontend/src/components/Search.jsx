@@ -20,7 +20,7 @@ const Search = ({showSearch}) => {
     }
 
     return (
-        <Form className={`flex-grow-1  position-relative p-0 mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
+        <Form className={`flex-grow-1   p-0 mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
             <FormControl
                 type="Search"
                 placeholder="Search"
@@ -30,7 +30,7 @@ const Search = ({showSearch}) => {
                 onChange={(e) => handleSearch(e.target.value)}
             >
             </FormControl>
-            <ListGroup className={`search-results mt-2 ${results.length ? "show" : ""}`}>
+            <ListGroup className={`search-results  ${results.length ? "show" : ""}`}>
                 {results.slice(0, 10).map((item, i) => (
                     <ListGroup.Item className="result-items" key={i}>{item}</ListGroup.Item>
                 ))}
