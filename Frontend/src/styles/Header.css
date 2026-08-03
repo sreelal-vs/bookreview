@@ -1,6 +1,7 @@
 .custom-toggle {
   padding: 2px 5px 2px 5px;
   border-radius: 10px !important;
+  
 
 }
 
@@ -61,9 +62,10 @@
 
   .searchwrapper {
     width: 100%;
-
-    padding: 0 12px;
-    position: absolute;
+    position: absolute !important;
+    padding: inherit;
+    
+    
     left: 0px;
     max-width: 0;
     opacity: 0;
@@ -99,9 +101,13 @@
 }
 
 .search-results {
+  position: absolute;
   border-radius: 0;
   width: 100%;
-  box-shadow: var(--shadow);
+  padding: inherit;
+  
+  left: 0%;
+  
   transform: translateY(-10px);
   opacity: 0;
   transition: all ease 0.3s;
@@ -115,6 +121,10 @@
   opacity: 1;
 
 
+}
+.searchwrapper{
+  box-shadow: var(--shadow);
+  position: relative;
 }
 
 .searchwrapper .form-control {
@@ -137,4 +147,8 @@
   border-left-width: 2px;
   border-right-width: 2px;
 
+}
+
+.dropdown-toggle::after{
+  display: none !important;
 }

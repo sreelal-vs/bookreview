@@ -1,0 +1,17 @@
+.footer
+{   
+    background-color: var(--accent);
+}
+.orange-gray
+{
+   color: rgb(234,190,179);
+}
+.accordion-button
+{
+  padding: 5px 10px;
+}
+.accordion-button:not(.collapsed)
+{
+  background-color: white ;
+  border: white;
+}

@@ -1,18 +1,30 @@
 
 import { useState } from "react";
-import { Button, Container, Image, Nav, Navbar } from "react-bootstrap"
-import { Link } from "react-router-dom";
+import { Button, Container, Dropdown, DropdownDivider, DropdownMenu, DropdownToggle, Image, ListGroup, Nav, Navbar, Offcanvas } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import { IoIosSearch } from "react-icons/io";
 import { CiHeart } from "react-icons/ci";
 import Search from "./Search";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogoutThunk } from "../Redux/authSlice";
 
 function Header() {
-
+    const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState(false);
     const [showBg, setshowBg] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [show, setShow] = useState(false);
+    const dispatch = useDispatch();
+    const { user, isAuthenticated, isAuthChecked } = useSelector((state) => state.auth)
 
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const handleLogout = () =>{
+        console.log("logout handle");
+        handleClose();
+        dispatch(userLogoutThunk());
+    }
 
 
     return (
@@ -25,7 +37,7 @@ function Header() {
 
                     setExpanded(isopen);
                     isopen && setShowSearch(false);
-                   
+
                 }}
                 className="mx-md-4 mx-sm-2">
                 <Container className="d-lg-flex d-block position-relative">
@@ -46,19 +58,40 @@ function Header() {
                         <Nav.Link
 
                             onClick={() => {
-                               !showSearch&&setExpanded(false)
-                               
+                                !showSearch && setExpanded(false)
                                 setShowSearch(!showSearch)
-
-
-
-                                console.log("search-->", showSearch);
                             }}
                             className="d-lg-none ms-auto"
                         ><IoIosSearch size={25} /></Nav.Link>
 
                         <Nav.Link className="d-lg-none d-block"><CiHeart size={25} /></Nav.Link>
-                        <Button className="d-lg-none d-block custom-btn ms-3 border-0">Sign in</Button>
+                        {isAuthChecked ? (
+                            isAuthenticated ?
+                                (
+                                    <div className="d-lg-none d-block ms-3">
+                                        <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle onClick={handleShow} />
+
+                                        <Offcanvas show={show} onHide={handleClose} placement="end" className="custom-offcan">
+                                            <Offcanvas.Header closeButton>
+                                                <p className="flex-grow-1 text-center">{user.email}</p>
+                                            </Offcanvas.Header>
+                                            <Offcanvas.Body className="pt-0">
+                                                <div className="d-flex flex-column align-items-center">
+                                                    <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="100px" width="100px" roundedCircle />
+                                                    <h5>Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
+                                                </div>
+                                                <ListGroup className="pt-4">
+
+                                                    <ListGroup.Item>Manage account</ListGroup.Item>
+                                                    <ListGroup.Item onClick={handleLogout}>Logout</ListGroup.Item>
+
+                                                </ListGroup>
+                                            </Offcanvas.Body>
+                                        </Offcanvas>
+                                    </div>
+                                )
+                                : (<Button onClick={() => { navigate('/signin') }} className="d-lg-none d-block custom-btn ms-3 border-0">Sign in</Button>))
+                            : null}
                     </div>
 
                     <Navbar.Collapse id="basic-navbar-nav">
@@ -74,10 +107,32 @@ function Header() {
                     </Navbar.Collapse>
                     <Nav.Link className="d-lg-block d-none mx-2"><CiHeart size={25} /></Nav.Link>
 
-                    
 
                     <Search showSearch={showSearch} />
-                    <Button className="d-lg-block d-none custom-btn mx-3 border-0">Sign in</Button>
+
+                    {isAuthChecked ? (
+                        isAuthenticated ?
+                            (
+                                <Dropdown align="end" className="d-lg-block d-none ms-3">
+                                    <DropdownToggle as="div" >
+                                        <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="50px" width="50px" roundedCircle />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <div className="d-flex flex-column p-3 align-items-center">
+                                            <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="50px" width="50px" roundedCircle />
+                                            <h5 className="m-0"> Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
+
+                                            <p className="text-muted small">{user.email}</p>
+                                        </div>
+                                        <DropdownDivider />
+                                        <Dropdown.Item>Manage account</Dropdown.Item>
+                                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+
+                                    </DropdownMenu>
+                                </Dropdown>
+                            )
+                            : (<Button onClick={() => { navigate('/signin') }} className="d-lg-block d-none custom-btn ms-3 border-0">Sign in</Button>))
+                        : null}
                 </Container>
             </Navbar>
         </>

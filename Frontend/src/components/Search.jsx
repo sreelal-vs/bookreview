@@ -20,7 +20,7 @@ const Search = ({showSearch}) => {
     }
 
     return (
-        <Form className={`flex-grow-1   p-0 mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
+        <Form className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
             <FormControl
                 type="Search"
                 placeholder="Search"
@@ -35,7 +35,7 @@ const Search = ({showSearch}) => {
                     <ListGroup.Item className="result-items" key={i}>{item}</ListGroup.Item>
                 ))}
                
-                    {results.length > 1 &&
+                    {results.length > 10 &&
                         <ListGroup.Item  className="text-center result-items">See results</ListGroup.Item>
                     }
                 
