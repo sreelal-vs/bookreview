@@ -19,10 +19,10 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/api/v1/book/', bookRoute);
-app.use('/api/v1/user/', userRoute);
-app.use('/api/v1/readingstatus/', readingstatusRoute);
-app.use('/api/v1/comment/', commentRoute);
+app.use('/api/v1/book', bookRoute);
+app.use('/api/v1/user', userRoute);
+app.use('/api/v1/readingstatus', readingstatusRoute);
+app.use('/api/v1/comment', commentRoute);
 app.use('/api/v1/review', reviewRoute);
 
 module.exports = app;

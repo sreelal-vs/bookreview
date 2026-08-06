@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, FormControl, ListGroup } from "react-bootstrap"
+import {useDispatch} from "react-router-dom"
 
 const Search = ({showSearch}) => {
     const [Query, setQuery] = useState("");
-    const [results, setResults] = useState([]);
-    const data = ["harry potter", "chicken soup", "atomic habits", "chikk pett","copy bai"];
-
-
-    const handleSearch = (value) => {
-        setQuery(value);
-        if (!value) return setResults([])
-
-        const filter = data.filter((item) => (
-            item.toLowerCase().startsWith(value.toLowerCase())
-        ));
-
-        setResults(filter);
-
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        let timeout = null;
+        
+        timeout = setTimeout(()=>{
+            dispatch(searchAsyncThunk(Query))
+        },800)
+        return () => clearTimeout(timeout);
+    },[Query,dispatch])
+    
+    const handleEvent = (value) => {
+        setQuery(value)            
     }
+    
 
     return (
         <Form className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
@@ -27,7 +27,7 @@ const Search = ({showSearch}) => {
                 aria-label="search"
                 value={Query}
                 className="d-lg-block "
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => handleEvent(e.target.value)}
             >
             </FormControl>
             <ListGroup className={`search-results  ${results.length ? "show" : ""}`}>

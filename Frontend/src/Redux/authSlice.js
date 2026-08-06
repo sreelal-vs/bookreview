@@ -4,9 +4,9 @@ import instance from "../api/axios";
 
 
 const initialState = {
-    user:"",
-    isAuthenticated:null,
-    isAuthChecked:false,
+    user: "",
+    isAuthenticated: null,
+    isAuthChecked: false,
     loading: false,
     error: null
 }
@@ -15,86 +15,91 @@ export const userLoginThunk = createAsyncThunk(
     "user/Login",
     async (userData, { rejectWithValue }) => {
         try {
-            
-           
-            const { data } = await instance.post("user/login",userData,{
-                withCredentials:true
+
+
+            const { data } = await instance.post("user/login", userData, {
+                withCredentials: true
             });
-            
+
             return data;
-        }catch (error) {
-            
-            
-            return rejectWithValue(error?.response?.data||"Login failed");
+        } catch (error) {
+
+
+            return rejectWithValue(error?.response?.data || "Login failed");
         }
     }
 )
 export const userLogoutThunk = createAsyncThunk(
     "user/Logout",
-    async (_,{rejectWithValue})=>{
+    async (_, { rejectWithValue }) => {
         try {
-            const {data} = await instance.post("user/logout");
+            const { data } = await instance.post("user/logout");
             return data
         } catch (error) {
+
+
             return rejectWithValue(error?.response?.data?.message || "Logout failed")
         }
     }
 )
 export const getCurrentUserThunk = createAsyncThunk(
     "currentUser/me",
-    async (_,{rejectWithValue})=>{
-        try {          
-            const {data} = await instance.get("user/me",{
-                withCredentials:true
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await instance.get("user/me", {
+                withCredentials: true
             })
             return data
         } catch (error) {
-            return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error ||"there is no user" );
+            return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error || "there is no user");
+
         }
     }
 )
 
 const authSlice = createSlice({
-    name: "authSlice",
+    name: "auth",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(userLoginThunk.pending,(state)=>{
+        builder.addCase(userLoginThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
-        }).addCase(userLoginThunk.fulfilled,(state,action)=>{
+        }).addCase(userLoginThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.error = null;
-            state.isAuthenticated=true;
-            state.isAuthChecked =true
-            state.user=action.payload.user;
-        }).addCase(userLoginThunk.rejected,(state,action)=>{
+            state.isAuthenticated = true;
+            state.isAuthChecked = true
+            state.user = action.payload.user;
+        }).addCase(userLoginThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;        
-        }).addCase(getCurrentUserThunk.pending,(state)=>{
+            state.error = action.payload;
+        }).addCase(getCurrentUserThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
-        }).addCase(getCurrentUserThunk.fulfilled,(state,action)=>{
+        }).addCase(getCurrentUserThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.error = null;
-            state.isAuthenticated=true;
+            state.isAuthenticated = true;
             state.isAuthChecked = true;
-            state.user=action.payload.user;
-        }).addCase(getCurrentUserThunk.rejected,(state,action)=>{
+            state.user = action.payload.user;
+        }).addCase(getCurrentUserThunk.rejected, (state, action) => {
+            state.isAuthChecked = true;
+            state.isAuthenticated = false;
             state.loading = false;
-            state.error = action.payload;        
-        }).addCase(userLogoutThunk.pending,(state)=>{
+            state.error = action.payload;
+        }).addCase(userLogoutThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
-        }).addCase(userLogoutThunk.fulfilled,(state)=>{
+        }).addCase(userLogoutThunk.fulfilled, (state) => {
             state.loading = false;
             state.error = null;
-            state.isAuthenticated=false;
+            state.isAuthenticated = false;
             state.isAuthChecked = true;
-            state.user="";
-        }).addCase(userLogoutThunk.rejected,(state,action)=>{
+            state.user = "";
+        }).addCase(userLogoutThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;        
+            state.error = action.payload;
         })
     }
 

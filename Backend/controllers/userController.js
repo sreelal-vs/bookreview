@@ -123,12 +123,15 @@ exports.getCurrentUser = async (req, res) => {
 
 
         const token = req.cookies.token;
+        
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message: "Unauthorized"
+                message: "Token not found"
             })
         }
+        
+        
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         const user = await User.findById(decoded.userId);
