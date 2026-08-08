@@ -8,6 +8,7 @@ import { CiHeart } from "react-icons/ci";
 import Search from "./Search";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogoutThunk } from "../Redux/authSlice";
+import { addQuery } from "../Redux/bookSlice";
 
 function Header() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Header() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleLogout = () =>{
-        console.log("logout handle");
+        
         handleClose();
         dispatch(userLogoutThunk());
     }
@@ -60,6 +61,7 @@ function Header() {
                             onClick={() => {
                                 !showSearch && setExpanded(false)
                                 setShowSearch(!showSearch)
+                                {showSearch&&dispatch(addQuery(""))}
                             }}
                             className="d-lg-none ms-auto"
                         ><IoIosSearch size={25} /></Nav.Link>

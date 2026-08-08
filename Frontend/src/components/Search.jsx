@@ -1,26 +1,36 @@
-import { useEffect, useState } from "react";
-import { Form, FormControl, ListGroup } from "react-bootstrap"
-import {useDispatch} from "react-router-dom"
+import { useEffect } from "react";
+import { Col, Form, FormControl, Image, ListGroup, Row } from "react-bootstrap"
 
-const Search = ({showSearch}) => {
-    const [Query, setQuery] = useState("");
-    const dispatch = useDispatch()
-    useEffect(()=>{
+import { addQuery, searchAsyncThunk } from "../Redux/bookSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom";
+const Search = ({ showSearch }) => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { books, Query, loading } = useSelector((state) => state.book)
+
+
+    useEffect(() => {
         let timeout = null;
-        
-        timeout = setTimeout(()=>{
+
+        timeout = setTimeout(() => {
             dispatch(searchAsyncThunk(Query))
-        },800)
+        }, 800)
         return () => clearTimeout(timeout);
-    },[Query,dispatch])
-    
+    }, [Query, dispatch])
+
     const handleEvent = (value) => {
-        setQuery(value)            
+        dispatch(addQuery(value))
     }
-    
+
 
     return (
-        <Form className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
+        <Form onSubmit={() => {
+            
+            navigate("/results")
+        }}
+            className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
             <FormControl
                 type="Search"
                 placeholder="Search"
@@ -28,18 +38,47 @@ const Search = ({showSearch}) => {
                 value={Query}
                 className="d-lg-block "
                 onChange={(e) => handleEvent(e.target.value)}
+
+
             >
             </FormControl>
-            <ListGroup className={`search-results  ${results.length ? "show" : ""}`}>
-                {results.slice(0, 10).map((item, i) => (
-                    <ListGroup.Item className="result-items" key={i}>{item}</ListGroup.Item>
-                ))}
-               
-                    {results.length > 10 &&
-                        <ListGroup.Item  className="text-center result-items">See results</ListGroup.Item>
+
+            {!loading && (
+                <ListGroup className={`search-results  ${books.length && Query ? "show" : ""}`}>
+                    {books.slice(0, 3).map((item, i) => (
+                        <ListGroup.Item className="result-items" key={i}>
+                            <Row>
+                                <Col lg={3} className="d-none d-lg-block">
+                                    {item.coverpicid ? (<Image
+                                        className="h-100 w-100"
+                                        src={`https://covers.openlibrary.org/b/id/${item.coverpicid}-M.jpg`}
+                                        height="50px"
+                                    />) : (
+                                        <Image
+                                            src="./assets/defaultcover.png"
+                                            height="50px"
+                                        />
+                                    )}
+                                </Col>
+                                <Col>
+                                    <p className="m-0 heading">{item.title}</p>
+                                    <p className="m-0 mono">{item.author}</p>
+
+                                </Col>
+
+                            </Row>
+                        </ListGroup.Item>
+                    ))}
+
+                    {books.length > 10 &&
+                        <ListGroup.Item className="text-center mono result-items"
+                            style={{ cursor: "pointer" }}
+                        >See results</ListGroup.Item>
                     }
-                
-            </ListGroup>
+
+                </ListGroup>
+            )}
+
         </Form>
     )
 }

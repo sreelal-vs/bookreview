@@ -1,10 +1,12 @@
 const express = require("express");
-const { addBooks } = require("../controllers/bookController");
+const { addBooks, bookResults } = require("../controllers/bookController");
 
 const router = express.Router();
 
 
-router.route('/results')
-router.route('/addbooks').post(addBooks)
+router.route('/results').get(bookResults)
+router.route('/addBooks').post(addBooks)
+
+
 
 module.exports = router;

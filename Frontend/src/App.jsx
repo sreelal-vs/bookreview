@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getCurrentUserThunk } from './Redux/authSlice';
+import Bookresults from './pages/Bookresults';
 
 
 function App() {
@@ -26,10 +27,9 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/register' element={<Register />} />
           <Route path='/signin' element={<Signin />} />
-          
+          <Route path='/results' element={<Bookresults/>}/>
         </Routes>
         <Footer />
-
       </BrowserRouter>
     </div>
   )

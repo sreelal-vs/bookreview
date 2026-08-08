@@ -106,8 +106,11 @@ exports.userLogin = async (req, res) => {
     }
 }
 exports.userLogOut =async (req,res)=>{
-    try {
-        res.status(200).clearCookie("token").json({
+    try {                
+        res.status(200).clearCookie("token",{
+            httpOnly:true,
+            path:'/'
+        }).json({
             success:true,
             message:"User Logout successfully"
         })

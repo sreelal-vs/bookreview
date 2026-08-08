@@ -33,7 +33,9 @@ export const userLogoutThunk = createAsyncThunk(
     "user/Logout",
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await instance.post("user/logout");
+            const { data } = await instance.post("user/logout",{},{
+                withCredentials:true
+            });
             return data
         } catch (error) {
 

@@ -18,14 +18,12 @@ const bookSchema = new mongoose.Schema({
         required: [true, "author name not found"]
     },
     seriesName:{
+        type: [String],
+        index: true   
+    },coverpicid: {
         type: String,
-        index: true,
-        
-    coverpicid: {
-        type: String,
-        required: [true, "cover picture not found"]
-    },
-    avgrating: {
+        default:null
+    },avgrating: {
         type: Number,
         max: 5
     },subjects: {

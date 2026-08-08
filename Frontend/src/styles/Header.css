@@ -104,10 +104,9 @@
   position: absolute;
   border-radius: 0;
   width: 100%;
+  top: 120%;
   padding: inherit;
-  
-  left: 0%;
-  
+  left: 0%; 
   transform: translateY(-10px);
   opacity: 0;
   transition: all ease 0.3s;
@@ -123,12 +122,12 @@
 
 }
 .searchwrapper{
-  box-shadow: var(--shadow);
   position: relative;
 }
 
 .searchwrapper .form-control {
   box-shadow: var(--shadow);
+  margin: 0px !important;
   border-color: var(--primary);
   border-width: 1.6px;
   border-radius: 5px;
@@ -136,18 +135,9 @@
 
 .searchwrapper .form-control:focus {
   border-color: var(--primary);
-
 }
 
-.searchwrapper .result-items {
 
-  border-style: solid;
-  border-color: var(--primary);
-  border-bottom-width: 2px;
-  border-left-width: 2px;
-  border-right-width: 2px;
-
-}
 
 .dropdown-toggle::after{
   display: none !important;
