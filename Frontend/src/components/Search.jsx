@@ -1,24 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Col, Form, FormControl, Image, ListGroup, Row } from "react-bootstrap"
 
 import { addQuery, searchAsyncThunk } from "../Redux/bookSlice";
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 const Search = ({ showSearch }) => {
-
+    const page = 1;
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const { books, Query, loading } = useSelector((state) => state.book)
-
-
+    const [showSuggestions,setShowSuggestions] = useState(false);
+    
+    
     useEffect(() => {
         let timeout = null;
-
+        if(location.pathname === "/results") return;
+        if(Query.length<1)return
         timeout = setTimeout(() => {
-            dispatch(searchAsyncThunk(Query))
+            dispatch(searchAsyncThunk({Query,page}))
         }, 800)
         return () => clearTimeout(timeout);
-    }, [Query, dispatch])
+    }, [Query, dispatch,location.pathname,page])
 
     const handleEvent = (value) => {
         dispatch(addQuery(value))
@@ -26,9 +29,13 @@ const Search = ({ showSearch }) => {
 
 
     return (
-        <Form onSubmit={() => {
-            
-            navigate("/results")
+        <Form onSubmit={(e) => {
+            e.preventDefault()  
+            setShowSuggestions(false)         
+            navigate({
+                pathname:"/results",
+                search:`?q=${Query}&page=1`
+            })
         }}
             className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
             <FormControl
@@ -37,14 +44,19 @@ const Search = ({ showSearch }) => {
                 aria-label="search"
                 value={Query}
                 className="d-lg-block "
-                onChange={(e) => handleEvent(e.target.value)}
+                onChange={(e) => {
+                    if(location.pathname !== "/results"){
+                        setShowSuggestions(true);
+                    }
+                    handleEvent(e.target.value)
+                }}
 
 
             >
             </FormControl>
 
             {!loading && (
-                <ListGroup className={`search-results  ${books.length && Query ? "show" : ""}`}>
+                <ListGroup className={`search-results  ${books.length && Query && showSuggestions ? "show" : ""}`}>
                     {books.slice(0, 3).map((item, i) => (
                         <ListGroup.Item className="result-items" key={i}>
                             <Row>

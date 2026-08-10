@@ -61,15 +61,10 @@
   }
 
   .searchwrapper {
-    width: 100%;
-    position: absolute !important;
-    padding: inherit;
-    
-    
-    left: 0px;
-    max-width: 0;
+    width: 100%;   
+    padding: inherit;   
+   
     opacity: 0;
-
     transition: all .3s ease;
   }
 
