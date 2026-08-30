@@ -12,7 +12,8 @@ const commentSchema = new mongoose.Schema({
         required:true
     },
     comment:{
-        
+        type:String,
+        required:true
     },
     isPublic:{
         type:Boolean,

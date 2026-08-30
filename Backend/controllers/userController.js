@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const Collections = require("../models/collectionModel");
 
 exports.userRegister = async (req, res) => {
     try {
@@ -26,7 +27,11 @@ exports.userRegister = async (req, res) => {
         }
 
         const user = await User.create(userData);
-
+        await Collections.create({
+            user:user._id,
+            collectionName:"Favourites",
+            books:[]
+        })
         res.status(200).json({
             success: true,
             message: "User registered successfully",

@@ -1,13 +1,17 @@
 
 @media (max-width:700px) {
     .card-img{
-        height: 12rem !important;
+        height: 15rem !important;
     }
+}
+.card{
+    background-color: var(--bg);
+    
 }
 .resulthead{
     height: 150px;
 }
-.result-center{
+.topborder{
     border-top-width: 0.8px;
     border-top-style: solid;
     border-top-color: rgba(0, 0, 0, 0.184);
@@ -35,4 +39,7 @@
 .card-subtitle{
     height: 20px;
     font-size: 12px;
+}
+.loading{
+    height: 700px;
 }

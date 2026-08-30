@@ -3,6 +3,7 @@ const Book = require("../models/bookModel");
 exports.addBooks = async (req, res) => {
     try {
         const books = req.body;
+        
 
 
         const { q } = req.query;
@@ -31,19 +32,26 @@ exports.addBooks = async (req, res) => {
                 return 0;
 
             }
-
+            
             return getPriority(title2) - getPriority(title1)
-        })
-
+        });
+        
         try {
-            await Book.insertMany(books, { ordered: false })
+             await Book.insertMany(books, { ordered: false });
+             
+              return res.status(200).json({
+                success: true,
+                message: "Books added successfully without duplication error",
+                books
+            })
+            
         } catch (error) {
-            if(error.code === 11000 || error.writeErrors) {
-                books.slice(0, 20);
+            if (error.code === 11000 || error.writeErrors) {
+                
                 return res.status(200).json({
                     success: true,
-                    message: "Books added successfully",
-                    books
+                    message: "Books added successfully with duplication error",
+                    
                 })
             }
         }
@@ -59,12 +67,12 @@ exports.addBooks = async (req, res) => {
 }
 exports.bookResults = async (req, res) => {
     try {
-        let { q,limit,offset } = req.query;
-        console.log(offset);
+        let { q, limit, offset } = req.query;
         
+
         limit = parseInt(limit);
         offset = parseInt(offset);
-        
+
 
 
         if (!q) {
@@ -84,7 +92,7 @@ exports.bookResults = async (req, res) => {
             return res.status(200).json({
                 success: false,
                 message: "No such book in database",
-                books: [],
+                books:[],
 
             })
         }
@@ -116,23 +124,76 @@ exports.bookResults = async (req, res) => {
             },
             {
                 $sort: { score: -1 }
-            },{
-                $skip:offset
+            }, {
+                $skip: offset
             },
             {
-                $limit:limit
+                $limit: limit
             }
 
         ]);
 
-        console.log(books);
         
+
         res.status(200).json({
             success: true,
             message: "Books fetched successfully",
             books,
             numFound
         })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+exports.discoveryResults = async (req, res) => {
+    try {
+        let { offset, limit, sortValue, sortOrder,pageNum } = req.query
+        offset = parseInt(offset);
+        limit = parseInt(limit);
+        sortOrder = parseInt(sortOrder);
+        pageNum = parseInt(pageNum);
+
+        
+        
+        if(!sortValue||!sortOrder||!pageNum){
+            return res.status(400).json({
+                success:false,
+                message:"something missing from query"
+            })
+        }
+        const totalcount = await Book.countDocuments();
+        const totalPages = Math.ceil(totalcount/20);
+        if(pageNum>totalPages)
+        {
+            return  res.status(200).json({
+                success:false,
+                message:"no more pages to load"
+            })
+        }
+        
+        
+        const books = await Book.aggregate([
+            { $sort: { [sortValue]: Number(sortOrder) } },
+            { $skip: offset },
+            { $limit: limit }
+        ])
+
+
+            
+            
+            
+            
+            
+            return  res.status(200).json({
+                success:false,
+                message:"got books successfully",
+                books
+            })
+
     } catch (error) {
         res.status(500).json({
             success: false,

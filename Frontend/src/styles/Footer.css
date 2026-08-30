@@ -1,17 +1,40 @@
-.footer
-{   
-    background-color: var(--accent);
+.footer {
+  background-color: var(--accent);
+  min-height: 110px;
+  z-index: 100;
 }
-.orange-gray
-{
-   color: rgb(234,190,179);
+.phone-nav{
+  background-color: white;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
-.accordion-button
-{
+
+.orange-gray {
+  color: rgb(234, 190, 179);
+}
+
+.accordion-button {
   padding: 5px 10px;
 }
-.accordion-button:not(.collapsed)
-{
-  background-color: white ;
+
+.accordion-button:not(.collapsed) {
+  background-color: white;
   border: white;
+}
+
+.vertical-border {
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+}
+.phn-nav{
+  color: rgba(0, 0, 0, 0.64);
+}
+
+
+ @media (max-width: 768px) {
+    .footer{
+      background-color: white ;
+      font-size: 50px;
+    }
 }

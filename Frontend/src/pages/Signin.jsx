@@ -4,7 +4,7 @@ import * as yup from "yup"
 import "../styles/App.css"
 import { useDispatch } from "react-redux";
 import { userLoginThunk } from "../Redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
     const dispatch =  useDispatch();
@@ -70,9 +70,9 @@ const Signin = () => {
                                     </Form.Group>
                                 </Row>
 
-
+                                <p>you don't have an account? <Link to="/register">Create account</Link></p>
                                 <div className="justify-content-center d-flex">
-                                    <Button type="submit" className="justify-self-center border-0 custom-btn">Submit form</Button>
+                                    <Button type="submit" className="justify-self-center border-0 custom-btn fs-5 mono">Login</Button>
                                 </div>
                             </Form>
                         )}

@@ -99,10 +99,8 @@ function Header() {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3 ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/">Home</Nav.Link>
-                            <Nav.Link className={`mx-0 mx-lg-3  px-lg-0 px-3 ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/">Latest</Nav.Link>
-                            <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3 ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/">Categories</Nav.Link>
-                            <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3  d-lg-none d-xl-block ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/">About Us</Nav.Link>
-                            <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3 ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/">Contact</Nav.Link>
+                            <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3 ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/Discovery">Discoveries</Nav.Link>
+                            <Nav.Link className={`mx-0 mx-lg-3 px-lg-0 px-3  ${showBg ? "showborder" : "noborder"} inter`} as={Link} to="/aboutus">About Us</Nav.Link>
 
                         </Nav>
 
@@ -128,6 +126,8 @@ function Header() {
                                         </div>
                                         <DropdownDivider />
                                         <Dropdown.Item>Manage account</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => { navigate('/library') }}>Library</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => { navigate('/profile') }}>Profile</Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
 
                                     </DropdownMenu>

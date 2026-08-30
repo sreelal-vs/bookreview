@@ -10,31 +10,38 @@ const Search = ({ showSearch }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { books, Query, loading } = useSelector((state) => state.book)
-    const [showSuggestions,setShowSuggestions] = useState(false);
-    
-    
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+
     useEffect(() => {
         let timeout = null;
-        if(location.pathname === "/results") return;
-        if(Query.length<1)return
+        if (location.pathname.startsWith("/Discovery")) return;
+        if (Query.length < 1) return
         timeout = setTimeout(() => {
-            dispatch(searchAsyncThunk({Query,page}))
+            dispatch(searchAsyncThunk({ Query, page }))
         }, 800)
         return () => clearTimeout(timeout);
-    }, [Query, dispatch,location.pathname,page])
+    }, [Query, dispatch, location.pathname, page])
 
     const handleEvent = (value) => {
-        dispatch(addQuery(value))
+        if (location.pathname.startsWith("/results")||location.pathname.startsWith("/Discovery")) {
+            dispatch(addQuery({ value: value, loading: false }))
+
+
+        }
+        else {
+            dispatch(addQuery({ value: value, loading: true }))
+        }
     }
 
 
     return (
         <Form onSubmit={(e) => {
-            e.preventDefault()  
-            setShowSuggestions(false)         
+            e.preventDefault()
+            setShowSuggestions(false)
             navigate({
-                pathname:"/results",
-                search:`?q=${Query}&page=1`
+                pathname: "/results",
+                search: `?q=${Query}&page=1`
             })
         }}
             className={`flex-grow-1    mt-1  mt-lg-0  searchwrapper ${showSearch ? "active" : ""}`}>
@@ -45,7 +52,7 @@ const Search = ({ showSearch }) => {
                 value={Query}
                 className="d-lg-block "
                 onChange={(e) => {
-                    if(location.pathname !== "/results"){
+                    if (location.pathname === "/") {
                         setShowSuggestions(true);
                     }
                     handleEvent(e.target.value)
@@ -57,7 +64,7 @@ const Search = ({ showSearch }) => {
 
             {!loading && (
                 <ListGroup className={`search-results  ${books.length && Query && showSuggestions ? "show" : ""}`}>
-                    {books.slice(0, 3).map((item, i) => (
+                    {location.pathname ==="/" &&books.slice(0, 3).map((item, i) => (
                         <ListGroup.Item className="result-items" key={i}>
                             <Row>
                                 <Col lg={3} className="d-none d-lg-block">
@@ -85,6 +92,13 @@ const Search = ({ showSearch }) => {
                     {books.length > 10 &&
                         <ListGroup.Item className="text-center mono result-items"
                             style={{ cursor: "pointer" }}
+                            onClick={() => {
+                                setShowSuggestions(false)
+                                navigate({
+                                    pathname: "/results",
+                                    search: `?q=${Query}&page=1`
+                                })
+                            }}
                         >See results</ListGroup.Item>
                     }
 

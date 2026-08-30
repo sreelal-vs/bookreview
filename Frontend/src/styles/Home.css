@@ -1,0 +1,36 @@
+.explore h3{
+  font-size: 40px;
+  font-weight: 700;
+}
+.discovery-btn{
+    background-color:var(--accent);
+    border-radius: 18px;
+    color:rgb(226, 226, 226);
+    transition: all ease 0.2s;
+}
+.discovery-btn:hover{
+    cursor: pointer;
+    opacity: 0.8;
+    color:rgb(255, 255, 255);
+}
+.hover-arrow{
+    transition: all ease 0.3s;
+}
+.discovery-btn:hover .hover-arrow{
+        transform: translateX(3px);
+}
+.card-text{
+    height: 100px;
+}
+.feature-card{
+    box-shadow: var(--shadow);
+    transition: all ease 0.3s;
+    cursor: pointer;
+}
+.feature-card:hover{
+    transform: translateY(-3px);
+}
+.card-header{
+    background-color:var(--bg);
+    border: none;
+}

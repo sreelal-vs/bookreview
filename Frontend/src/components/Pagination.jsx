@@ -6,16 +6,21 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const Pagination = () => {
 
     const { totalPages } = useSelector((state) => state.book)
-    const [currentPage, setCurrentPage] = useState(1)
+    
     const totalPageNumber = Array.from({ length: totalPages }, (_, i) => i + 1)
    const [searchParams] = useSearchParams();
     const Query = searchParams.get("q")
+    let page = searchParams.get("page");
+    page = parseInt(page)
+    const [currentPage, setCurrentPage] = useState(page)
+    
+    
     const navigate = useNavigate()
     const handlePagination = (value) => {
-        setCurrentPage(value);            
+        setCurrentPage(value);                                      
         navigate({
                 pathname:"/results",
-                search:`?q=${Query}&page=${currentPage}`
+                search:`?q=${Query}&page=${value}`
             })
     }
     return (
@@ -29,7 +34,7 @@ const Pagination = () => {
                         < li
                             key={pagenumber}
                             onClick={() => { handlePagination(pagenumber) }}
-                            className={`pag-key ${pagenumber=== currentPage ? "active":""}`}
+                            className={`pag-key ${pagenumber === currentPage ? "active":""}`}
                         >
                             {pagenumber}
                         </li>)

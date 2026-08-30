@@ -1,0 +1,39 @@
+.dropdown-item.active::before {
+    position: absolute;
+    content:"•";
+    font-size: 1rem;
+    left: 7px;
+    
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    position: relative;
+    color: black !important;
+    background: none !important;
+}
+.dropdown button{
+    background-color: rgb(230, 206, 159);
+    color: var(--text);
+    border: 0px;
+    
+}
+.custom-drop-down .btn-check:checked+.btn,.custom-drop-down .btn.active,.custom-drop-down .btn.show,.custom-drop-down .btn:first-child:active,.custom-drop-down :not(.btn-check)+.btn:active{
+    background-color: rgb(240, 223, 189) !important;
+    color: var(--text);
+
+}
+.custom-drop-down .btn:hover{
+    background-color: rgba(240, 223, 189, 0.785) !important;
+    color: var(--text);
+}
+.readlist-drop .dropdown-toggle,.dropdown-menu{
+    border-radius: 3px !important;  
+}
+.readlist-drop .btn-check:checked+.btn,.readlist-drop .btn.active,.readlist-drop .btn.show,.readlist-drop .btn:first-child:active,.readlist-drop :not(.btn-check)+.btn:active{
+    
+    color: var(--text);
+
+}
+.readlist-drop .btn:hover{
+    color: var(--text);
+}
