@@ -5,7 +5,7 @@ import instance from "../api/axios";
 
 const initialState = {
     user: "",
-    isAuthenticated: null,
+    isAuthenticated: false,
     isAuthChecked: false,
     loading: false,
     error: null

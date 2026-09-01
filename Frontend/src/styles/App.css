@@ -1,21 +1,36 @@
-.section-size{
-    
+.section-size {
+
     max-width: 1150px;
     width: 100%;
-    
-}
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  
+
 }
 
-.auth-card{
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+}
+
+.auth-card {
     background: var(--accent-bg);
     border-radius: 10px;
 }
-.dlt-btn{
+
+.dlt-btn {
     right: 6px;
     top: 6px;
+    transition: all ease 0.3s;
+}
+
+.card-img-wrap:hover .dlt-btn{
+    transform: translateY(-8px); 
+    background-color: red;
+}
+.fav-btn{
+    /* color: rgb(125 86 45); */
+    /* left: 24px;
+    top: 24px;
+    transition: all ease 0.3s; */
+
 }

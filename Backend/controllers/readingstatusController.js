@@ -135,6 +135,7 @@ exports.getreadListBooks = async (req, res) => {
 exports.deleteBook = async(req,res) =>{
     try {
         const {id} = req.params;
+        const {userId} = req.userData;
         if(!id){
             return res.status(404).json({
             success: false,
@@ -143,8 +144,9 @@ exports.deleteBook = async(req,res) =>{
 
         })}
 
-         const book = await ReadingList.findByIdAndDelete(id);
-         if(!book){
+         const Deletedbook = await ReadingList.findByIdAndDelete(id);
+         const books = await ReadingList.find({user:userId}).populate("book");
+         if(!Deletedbook){
             return res.status(404).json({
             success: false,
             message: "book not found",
@@ -153,10 +155,13 @@ exports.deleteBook = async(req,res) =>{
          return res.status(200).json({
             success: true,
             message: "Deletion success",
+            books
             
 
         })
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({
             success: false,
             message: error.message

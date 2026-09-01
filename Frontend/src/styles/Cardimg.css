@@ -16,6 +16,11 @@
     border-top-style: solid;
     border-top-color: rgba(0, 0, 0, 0.184);
 }
+.bottomborder{
+    border-bottom-width: 0.8px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(0, 0, 0, 0.184);
+}
 .resulthead h2{
     font-weight: 600;
     font-size: 45px;
@@ -29,7 +34,7 @@
     border-style: solid;
     transition: all ease 0.3s;
 }
-.card-img:hover{
+.card-img-wrap:hover .card-img{
     transform: translateY(-8px);
     box-shadow: var(--shadow);
 }

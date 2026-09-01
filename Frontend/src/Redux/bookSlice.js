@@ -14,7 +14,7 @@ export const discoveryAsyncThunk = createAsyncThunk(
     "discovery/results",
     async ({ sortOrder, sortValue, pageNum }, { rejectWithValue }) => {
         try {
-            console.log("evokeddddd");
+           
 
             const { data } = await instance.get("book/discovery/result", {
                 params: {
@@ -137,10 +137,10 @@ const bookSlice = createSlice({
             state.loading = false;
             state.error = null;
 
-            console.log(action.payload.books);
+            
 
             if (state.reset) {
-                state.books = action.payload.books;
+                state.books = action.payload.books;                
             } else {
                 state.books = [...state.books, ...action.payload.books];
             }

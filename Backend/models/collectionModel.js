@@ -13,7 +13,7 @@ const collectionScheme = new mongoose.Schema({
     },
     books:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Book"       
+        ref:"book"       
     }]
 })
 

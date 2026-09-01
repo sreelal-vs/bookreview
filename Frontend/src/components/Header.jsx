@@ -105,7 +105,7 @@ function Header() {
                         </Nav>
 
                     </Navbar.Collapse>
-                    <Nav.Link className="d-lg-block d-none mx-2"><CiHeart size={25} /></Nav.Link>
+                    <Nav.Link className="d-lg-block d-none mx-2" as={Link} to={"/favourites"}><CiHeart size={25} /></Nav.Link>
 
 
                     <Search showSearch={showSearch} />

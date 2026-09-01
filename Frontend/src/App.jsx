@@ -14,6 +14,9 @@ import Discovery from './pages/Discovery';
 import Aboutus from './pages/Aboutus';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
+import FavouriteBooks from './pages/FavouriteBooks';
+
+
 
 
 function App() {
@@ -37,6 +40,7 @@ function App() {
           <Route path='/aboutus' element={<Aboutus/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/library' element={<Library/>}/>
+          <Route path='/favourites' element={<FavouriteBooks/>}/>
 
 
 

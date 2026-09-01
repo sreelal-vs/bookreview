@@ -6,7 +6,7 @@ const commentRoute = require("./Routes/commentRoute");
 const reviewRoute = require("./Routes/reviewRoute");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
+const collectionRoute = require("./Routes/collectionRoute")
 
 
 const app = express();
@@ -24,5 +24,6 @@ app.use('/api/v1/user', userRoute);
 app.use('/api/v1/readingstatus',readingstatusRoute);
 app.use('/api/v1/comment', commentRoute);
 app.use('/api/v1/review', reviewRoute);
+app.use('/api/v1/collection',collectionRoute);
 
 module.exports = app;
