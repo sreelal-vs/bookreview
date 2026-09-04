@@ -112,7 +112,13 @@ const readingListSlice = createSlice({
         state.loading = true;
        }).addCase(deleteListBookThunk.fulfilled,(state,action)=>{
         state.loading = false;
-        state.readListBooks = action.payload.books;
+      
+        const index = state.readListBooks.findIndex((item)=>
+            item._id == action.payload.deletedBookId
+        );
+        state.readListBooks.splice(index,1);
+        
+        
        }).addCase(deleteListBookThunk.rejected,(state,action)=>{
         state.loading = false;
         state.error = action.payload

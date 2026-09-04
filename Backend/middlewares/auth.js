@@ -5,7 +5,7 @@ exports.authenticate = async (req,res,next)=>{
      
        const token = req.cookies.token;
         if(!token){
-            res.status(200).json({
+            return res.status(404).json({
                 success:false,
                 message:"token not found"
             })

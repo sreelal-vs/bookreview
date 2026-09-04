@@ -12,6 +12,10 @@ import { TiPlus } from "react-icons/ti";
 import { getListBookThunk, updateStatusThunk } from "../Redux/readingListSlice";
 import { TbHeartFilled } from "react-icons/tb";
 import { getFavouriteBooksThunk, updateFavouriteThunk } from "../Redux/bookCollectionSlice";
+import ReviewModal from "../components/ReviewModal";
+import StarRating from "../components/StarRating";
+import { LiaCommentsSolid } from "react-icons/lia";
+import CollectionDropdown from "../components/CollectionDropdown";
 
 const Bookresults = () => {
     const [searchParams] = useSearchParams();
@@ -48,7 +52,7 @@ const Bookresults = () => {
 
 
     readingList.forEach(item => {
-        if (item.book._id) {
+        if (item.book?._id) {
             readingMap.set(item.book._id.toString(), item.status)
         }
         return
@@ -106,6 +110,7 @@ const Bookresults = () => {
         })
     })
 
+    const [reviewingBookId, setReviewingBookId] = useState(null);
 
     return (
         <div className="flex-grow-1 d-flex flex-column align-items-center  px-3 px-sm-5 ">
@@ -132,60 +137,40 @@ const Bookresults = () => {
 
                                 <Card.Body>
                                     {isAuthenticated && (
-                                        <div className="d-flex">
-                                            <Dropdown className="my-2 w-100 custom-drop-down readlist-drop" >
-                                                <Dropdown.Toggle id="dropdown-autoclose-true" className=" w-100">
-                                                    {readingStatusLabel[book.readingStatus]}
-                                                </Dropdown.Toggle>
+                                            <div className="d-flex">
+                                                <Dropdown className="my-2 w-100 custom-drop-down readlist-drop" >
+                                                    <Dropdown.Toggle id="dropdown-autoclose-true" className=" w-100">
+                                                        {readingStatusLabel[book.readingStatus]}
+                                                    </Dropdown.Toggle>
 
-                                                <Dropdown.Menu className="w-100">
-                                                    <Dropdown.Item onClick={() => handleStatus(book._id, "to-read")} active={book.readingStatus === "to-read"} disabled={book.readingStatus === "to-read"} >To read</Dropdown.Item>
-                                                    <Dropdown.Item onClick={() => handleStatus(book._id, "reading")} active={book.readingStatus === "reading"} disabled={book.readingStatus === "reading"}>Reading</Dropdown.Item>
-                                                    <Dropdown.Item onClick={() => handleStatus(book._id, "finished")} active={book.readingStatus === "finished"} disabled={book.readingStatus === "finished"}>Finished</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                            <Dropdown className="align-self-center readlist-drop">
-                                                <Dropdown.Toggle id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent pt-0 pe-0">
-                                                    <MdBookmarkAdd size={20} />
+                                                    <Dropdown.Menu className="w-100">
+                                                        <Dropdown.Item onClick={() => handleStatus(book._id, "to-read")} active={book.readingStatus === "to-read"} disabled={book.readingStatus === "to-read"} >To read</Dropdown.Item>
+                                                        <Dropdown.Item onClick={() => handleStatus(book._id, "reading")} active={book.readingStatus === "reading"} disabled={book.readingStatus === "reading"}>Reading</Dropdown.Item>
+                                                        <Dropdown.Item onClick={() => handleStatus(book._id, "finished")} active={book.readingStatus === "finished"} disabled={book.readingStatus === "finished"}>Finished</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
 
-                                                </Dropdown.Toggle>
-
-                                                <Dropdown.Menu >
-                                                    {/* create new collection */}
-                                                    <Dropdown.Item onClick={(e) => e.stopPropagation()}>
-                                                        <Dropdown className="align-self-center ">
-                                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent p-0">
-                                                                <TiPlus className="mb-1" />
-
-                                                                Add to collection
-                                                            </Dropdown.Toggle>
-
-                                                            <Dropdown.Menu >
-                                                                <Dropdown.Item >
-                                                                    Create playlist
-                                                                </Dropdown.Item>
-
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-
-                                                    </Dropdown.Item>
-                                                    {/* create new collection */}
-
-
-                                                    <Dropdown.Item >Add to favourite</Dropdown.Item>
-
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                            <div className="fav-btn bg-transparent  rounded-2 pt-2 " onClick={() => { handleLike(book.likeStatus, book._id) }}>
-                                                <TbHeartFilled className={`mt-1 ${book.likeStatus ? "liked" : "notliked"} ${clickedId == book._id ? "animate" : ""}`} size={20} />
+                                                <CollectionDropdown bookId={book._id} />
+                                                <div className="fav-btn bg-transparent  rounded-2 pt-2 " onClick={() => { handleLike(book.likeStatus, book._id) }}>
+                                                    <TbHeartFilled className={`mt-1 ${book.likeStatus ? "liked" : "notliked"} ${clickedId == book._id ? "animate" : ""}`} size={20} />
+                                                </div>
                                             </div>
-                                        </div>
 
 
-                                    )}
+                                        )}
                                     <Card.Title className="libre-heading">{truncateText(book.title, 20)}</Card.Title>
                                     <Card.Subtitle className="mt-1 text-black-50">{book.author}</Card.Subtitle>
-
+                                    {isAuthenticated && (
+                                        <Row>
+                                            <Col className="heading pe-0 flex-grow-0 mx-1">
+                                                <div onClick={() => { setReviewingBookId(book._id) }} className="review-btn px-1 mt-1 d-flex justify-content-between align-items-center"><LiaCommentsSolid /><span>Reviews</span></div>
+                                                <ReviewModal bookId={book._id} show={reviewingBookId === book._id} handleClose={() => { setReviewingBookId(null) }} onHide={() => { setReviewingBookId(null) }} />
+                                            </Col>
+                                            <Col className="p-0 flex-wrap-1">
+                                                <StarRating readOnly={true} starCount={book.avgrating} />
+                                            </Col>
+                                        </Row>
+                                    )}
                                 </Card.Body>
                             </Card>
                         </Col>

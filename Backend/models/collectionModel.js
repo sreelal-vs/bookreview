@@ -15,6 +15,8 @@ const collectionScheme = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"book"       
     }]
+},{
+    timestamps:true
 })
 
 const Collections = mongoose.model("Collection",collectionScheme);

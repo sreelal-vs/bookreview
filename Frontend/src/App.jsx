@@ -1,5 +1,5 @@
-import './styles/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from './components/Header';
 import Home from './pages/Home';
@@ -15,6 +15,7 @@ import Aboutus from './pages/Aboutus';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
 import FavouriteBooks from './pages/FavouriteBooks';
+import ActiveCollection from './components/ActiveCollection';
 
 
 
@@ -41,9 +42,7 @@ function App() {
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/library' element={<Library/>}/>
           <Route path='/favourites' element={<FavouriteBooks/>}/>
-
-
-
+          <Route path='/current-collection/:id' element={<ActiveCollection/>}/>
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -3,28 +3,34 @@ import { truncateText } from "../assets/assetsFunction";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import "../styles/Discovery.css"
-import { MdArrowDropDown, MdBookmarkAdd } from "react-icons/md";
+import { MdArrowDropDown } from "react-icons/md";
 import { TbHeartFilled } from "react-icons/tb";
-
-import { TiPlus } from "react-icons/ti";
+import { LiaCommentsSolid } from "react-icons/lia";
 import { discoveryAsyncThunk, refresh } from "../Redux/bookSlice";
 import defaultPic from "../assets/defaultcover.png";
 import { getListBookThunk, updateStatusThunk } from "../Redux/readingListSlice";
-import { getFavouriteBooksThunk, updateFavouriteThunk } from "../Redux/bookCollectionSlice";
+import { getBookCollectionsThunk, getFavouriteBooksThunk, updateFavouriteThunk } from "../Redux/bookCollectionSlice";
+import CollectionDropdown from "../components/CollectionDropdown";
+import StarRating from "../components/StarRating";
+import ReviewModal from "../components/ReviewModal";
+// import Review from "../components/Review";
+
 
 
 const Discovery = () => {
 
-    
-    const [sortValue, setSortValue] = useState("title");  
+
+    const [sortValue, setSortValue] = useState("title");
     const [sortOrder, setSortOrder] = useState("1");
     const [pageNum, setpageNum] = useState(1);
 
 
     const { isAuthenticated } = useSelector((state) => state.auth);
     const { readingList } = useSelector((state) => state.Library);
-    const  {fav}  = useSelector((state) => state.collection);
+    const { fav } = useSelector((state) => state.collection);
     const { books, loading } = useSelector((state) => state.book);
+
+
 
 
     const readingMap = new Map()
@@ -60,12 +66,14 @@ const Discovery = () => {
 
     }
     useEffect(() => {
-        if(isAuthenticated){
+        if (isAuthenticated) {
             dispatch(getListBookThunk())
             dispatch(getFavouriteBooksThunk())
+            dispatch(getBookCollectionsThunk());
+
         }
         return
-    }, [dispatch,isAuthenticated])
+    }, [dispatch, isAuthenticated])
     useEffect(() => {
         if (isFetch.current) return;
         scrollY.current = window.scrollY;
@@ -74,25 +82,25 @@ const Discovery = () => {
         isFetch.current = true
 
     }, [sortOrder, sortValue, pageNum, dispatch])
-    
+
     readingList.forEach(item => {
-        if(item.book._id){
+        if (item.book?._id) {
             readingMap.set(item.book._id.toString(), item.status)
         }
         return
     });
-    
-    
-    
-    fav?.books?.forEach(item =>{
-        if(item){
-            likeMap.set(item?._id.toString(),true);                                                
+
+
+
+    fav?.books?.forEach(item => {
+        if (item) {
+            likeMap.set(item?._id.toString(), true);
         }
-        
+
         return
     })
-    
-    
+
+
 
     const addedBooks = books.map((item) => {
 
@@ -103,35 +111,39 @@ const Discovery = () => {
         return {
             ...item,
             readingStatus: status,
-            likeStatus:liked
+            likeStatus: liked
         }
     })
-   
-    
+
+
 
 
     useEffect(() => {
         window.scrollTo(0, scrollY.current);
     }, [books]);
 
-    const [clickedId,setClickedId] = useState(null);
+    const [clickedId, setClickedId] = useState(null);
     const handleStatus = (id, value) => {
         dispatch(updateStatusThunk({ id, value }));
     }
-    
-    const handleLike = (liked,id) =>{
-        setClickedId(id);       
-        dispatch(updateFavouriteThunk({liked,id}))
+
+    const handleLike = (liked, id) => {
+        setClickedId(id);
+        dispatch(updateFavouriteThunk({ liked, id }))
     }
-    useEffect(()=>{
-        if(!clickedId) return;
-        const timer  = setTimeout(() => {
+    useEffect(() => {
+        if (!clickedId) return;
+        const timer = setTimeout(() => {
             setClickedId(null);
-        },300);
-        return (()=>{
+        }, 300);
+        return (() => {
             clearTimeout(timer)
         })
     })
+
+    const [reviewingBookId, setReviewingBookId] = useState(null);
+
+
     return (
         <div className="flex-grow-1 d-flex justify-content-center my-5">
             <div className="section-size px-3 px-sm-5 px-lg-0">
@@ -184,40 +196,10 @@ const Discovery = () => {
                                                         <Dropdown.Item onClick={() => handleStatus(book._id, "finished")} active={book.readingStatus === "finished"} disabled={book.readingStatus === "finished"}>Finished</Dropdown.Item>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
-                                                <Dropdown className="align-self-center readlist-drop">
-                                                    <Dropdown.Toggle id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent pt-0 pe-0">
-                                                        <MdBookmarkAdd size={20} />
 
-                                                    </Dropdown.Toggle>
-
-                                                    <Dropdown.Menu >
-                                                        {/* create new collection */}
-                                                        <Dropdown.Item onClick={(e) => e.stopPropagation()}>
-                                                            <Dropdown className="align-self-center ">
-                                                                <Dropdown.Toggle id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent p-0">
-                                                                    <TiPlus className="mb-1" />
-
-                                                                    Add to collection
-                                                                </Dropdown.Toggle>
-
-                                                                <Dropdown.Menu >
-                                                                    <Dropdown.Item >
-                                                                        Create playlist
-                                                                    </Dropdown.Item>
-
-                                                                </Dropdown.Menu>
-                                                            </Dropdown>
-
-                                                        </Dropdown.Item>
-                                                        {/* create new collection */}
-
-
-                                                        <Dropdown.Item >Add to favourite</Dropdown.Item>
-
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
-                                                <div className="fav-btn bg-transparent  rounded-2 pt-2 " onClick={() => { handleLike(book.likeStatus,book._id) }}>
-                                                    <TbHeartFilled className={`mt-1 ${book.likeStatus?"liked":"notliked"} ${clickedId == book._id?"animate":""}`} size={20} />
+                                                <CollectionDropdown bookId={book._id} />
+                                                <div className="fav-btn bg-transparent  rounded-2 pt-2 " onClick={() => { handleLike(book.likeStatus, book._id) }}>
+                                                    <TbHeartFilled className={`mt-1 ${book.likeStatus ? "liked" : "notliked"} ${clickedId == book._id ? "animate" : ""}`} size={20} />
                                                 </div>
                                             </div>
 
@@ -225,7 +207,17 @@ const Discovery = () => {
                                         )}
                                         <Card.Title className="libre-heading">{truncateText(book.title, 20)}</Card.Title>
                                         <Card.Subtitle className="mt-1 text-black-50">{book.author}</Card.Subtitle>
-
+                                        {isAuthenticated && (
+                                            <Row>
+                                                <Col className="heading pe-0 flex-grow-0 mx-1">
+                                                    <div onClick={() => { setReviewingBookId(book._id) }} className="review-btn px-1 mt-1 d-flex justify-content-between align-items-center"><LiaCommentsSolid /><span>Reviews</span></div>
+                                                    <ReviewModal bookId={book._id} show={reviewingBookId === book._id}  onHide={() => { setReviewingBookId(null) }} />
+                                                </Col>
+                                                <Col className="p-0 flex-wrap-1">
+                                                    <StarRating readOnly={true} starCount={book.avgrating} />
+                                                </Col>
+                                            </Row>
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>

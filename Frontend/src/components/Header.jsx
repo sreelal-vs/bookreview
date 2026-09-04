@@ -51,7 +51,7 @@ function Header() {
                             }} className="custom-toggle">
 
                             </Navbar.Toggle>
-                            <Navbar.Brand className="brand-name"><Image src='./booknestfavicon.png' alt="logo" className="mx-2" />
+                            <Navbar.Brand className="brand-name"><Image src="./booknestfavicon.png" alt="logo" className="mx-2" />
                                 BookNest
                             </Navbar.Brand>
                         </div>
@@ -79,7 +79,7 @@ function Header() {
                                             </Offcanvas.Header>
                                             <Offcanvas.Body className="pt-0">
                                                 <div className="d-flex flex-column align-items-center">
-                                                    <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="100px" width="100px" roundedCircle />
+                                                    <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="100px" width="100px" roundedCircle />
                                                     <h5>Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
                                                 </div>
                                                 <ListGroup className="pt-4">

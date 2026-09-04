@@ -25,7 +25,8 @@ const bookSchema = new mongoose.Schema({
         default:null
     },avgrating: {
         type: Number,
-        max: 5
+        max: 5,
+        default:0
     },subjects: {
         type: [String],
         default: [],

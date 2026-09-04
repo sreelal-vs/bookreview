@@ -36,7 +36,7 @@ const FavouriteBooks = () => {
     };
 
     readingList?.forEach(item => {
-        if (item.book._id) {
+        if (item.book?._id) {
             readingMap.set(item.book._id.toString(), item.status)
         }
         return

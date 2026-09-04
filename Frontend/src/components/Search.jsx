@@ -15,7 +15,7 @@ const Search = ({ showSearch }) => {
 
     useEffect(() => {
         let timeout = null;
-        if (location.pathname.startsWith("/Discovery")) return;
+        if (location.pathname.startsWith("/Discovery") || location.pathname.startsWith("/results")) return;
         if (Query.length < 1) return
         timeout = setTimeout(() => {
             dispatch(searchAsyncThunk({ Query, page }))

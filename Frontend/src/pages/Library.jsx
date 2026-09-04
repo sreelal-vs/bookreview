@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Dropdown, Form, Modal, Row, Spinner } from "react-bootstrap"
-import { MdArrowDropDown, MdBookmarkAdd } from "react-icons/md";
+import { useCallback, useEffect, useState } from "react";
+import { Button, Card, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap"
+import { MdArrowDropDown, MdBookmarkAdd, MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux"
 import { truncateText } from "../assets/assetsFunction"
 import defaultPic from "../assets/defaultcover.png"
@@ -8,13 +8,18 @@ import { deleteListBookThunk, getReadListBooksThunk, updateStatusThunk } from ".
 import { TiPlus } from "react-icons/ti";
 import { RiCloseFill } from "react-icons/ri";
 import "../styles/Library.css"
-import { createCollectionThunk } from "../Redux/bookCollectionSlice";
+import {  deleteCollectionThunk, getBookCollectionsThunk } from "../Redux/bookCollectionSlice";
+import CollectionCover from "../components/CollectionCover";
+import { useNavigate } from "react-router-dom";
+import ModalComponent from "../components/ModalComponent";
 
 
 const Library = () => {
     const [sortValue, setSortValue] = useState("title");
     const [sortOrder, setSortOrder] = useState("1");
     const { readListBooks, loading } = useSelector((state) => state.Library);
+    const {collections} = useSelector((state) => state.collection);
+
     const [readingStatus, setReadingStatus] = useState("default");
 
     const dispatch = useDispatch();
@@ -39,20 +44,43 @@ const Library = () => {
     useEffect(() => {
         dispatch(getReadListBooksThunk({ readingStatus, sortOrder, sortValue }))
     }, [dispatch, readingStatus, sortOrder, sortValue])
+    useEffect(() => {
+        dispatch(getBookCollectionsThunk());
+        
+    }, [dispatch])
+    
+
     const handleStatus = (id, value) => {
         dispatch(updateStatusThunk({ id, value }));
     }
     const handleClose = (id) => {
-        dispatch(deleteListBookThunk(id))
+        dispatch(deleteListBookThunk(id));
     }
     const [modalShow, setModalShow] = useState(false);
-    const handleSubmit = (event) => {
-        const name = event.target.collectionName.value;
-        setModalShow(false)
-        event.preventDefault()
-        dispatch(createCollectionThunk(name))
-
+    // const handleSubmit = (event) => {
+    //     const name = event.target.collectionName.value;
+    //     setModalShow(false)
+    //     event.preventDefault()
+    //     dispatch(createCollectionThunk(name))
+    // }
+    const handleCollectionDelete = (id) =>{
+        dispatch(deleteCollectionThunk(id))
     }
+    const navigate = useNavigate();
+   const [colors, setColors] = useState({}); 
+    const setDomColour = useCallback((colour, id) => {
+    setColors((prev) => ({
+        ...prev, [id]: colour
+    }));
+}, []);
+    const handleCollectionNav = (id) =>{      
+        navigate(`/current-collection/${id}`,{
+            state:{colour:colors[id]}
+        })
+    }
+    
+   
+    
     return (
         <div className="flex-grow-1 d-flex justify-content-center my-5">
             <div className="section-size px-3 px-sm-5 px-lg-0">
@@ -94,8 +122,8 @@ const Library = () => {
                     <Container className="read-list-container">
                         <Row xs={2} sm={3} lg={4} className="section-size  g-4 m-0" >
 
-                            {readListBooks?.map((item, i) => (
-                                <Col key={i}>
+                            {readListBooks?.map((item) => (
+                                <Col key={item._id}>
                                     <Card className="border-0">
                                         <div className="card-img-wrap p-3 position-relative">
                                             <div className="dlt-btn bg-body position-absolute rounded-2 z-2 " onClick={() => { handleClose(item._id) }}>
@@ -144,7 +172,7 @@ const Library = () => {
                                                         {/* create new collection */}
 
 
-                                                        <Dropdown.Item >Add to favourite</Dropdown.Item>
+                                                        <Dropdown.Item >Create Collection</Dropdown.Item>
 
                                                     </Dropdown.Menu>
                                                 </Dropdown>
@@ -167,34 +195,29 @@ const Library = () => {
                         <Col className="text-end align-self-center">
                             <Button className="custom-btn border-0" onClick={() => { setModalShow(true) }}>
                                 Create New Collection
-                            </Button>
-                            <Modal
-                                show={modalShow}
-                                size="lg"
-                                aria-labelledby="contained-modal-title-vcenter"
-                                centered
-                                onHide={() => setModalShow(false)}
-                            >
-                                <Modal.Header closeButton>
-                                    <Modal.Title className="libre-heading text-center flex-grow-1" id="contained-modal-title-vcenter">
-                                        Give your collection a name
-                                    </Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <Form onSubmit={handleSubmit}>
-                                        <Form.Group className="mb-4" controlId="formGroupEmail">
-
-                                            <Form.Control name="collectionName" type="text" placeholder="Enter the collection name" />
-                                        </Form.Group>
-                                        <Row className="justify-content-center ">
-                                            <Col className="d-flex justify-content-end"><Button className="custom-btn border-0 " onClick={() => setModalShow(false)}>Close</Button></Col>
-                                            <Col ><Button type="submit" className="custom-btn border-0 ">Save</Button></Col>
-                                        </Row>
-                                    </Form>
-                                </Modal.Body>
-
-                            </Modal>
+                            </Button>       
+                            <ModalComponent show={modalShow} onHide={()=>{setModalShow(false)}} onSubmit={()=>{setModalShow(false)}}/>
                         </Col>
+                    </Row>
+                    <Row xs={2} sm={3} lg={4} className="g-4">
+                        {collections.map((collection,i)=>(
+                            <Col  style={{cursor:"pointer"}}  key={collection._id} onClick={()=>{handleCollectionNav(collection._id,i)}}>
+                                <Card>
+                                    <CollectionCover Initialbooks={collections[i].books} setDomColour={setDomColour} id={collection._id}/>
+                                    <Card.Body >
+                                        <Card.Title className="libre-heading fw-semibold">{collection.collectionName}</Card.Title>
+                                        <div className="d-flex justify-content-between z-3" > 
+                                            <p className="mono m-0 fs-6">{collection.books.length} {collection.books.length <= 1?"book":"books"}</p>
+                                            <MdDelete onClick={(e)=>{
+                                                e.stopPropagation();
+                                                handleCollectionDelete(collection._id)}}/>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                                
+                               
+                            </Col>
+                        ))}
                     </Row>
                 </Container>
             </div>
