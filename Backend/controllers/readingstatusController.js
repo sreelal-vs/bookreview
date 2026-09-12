@@ -169,3 +169,21 @@ exports.deleteBook = async(req,res) =>{
         })
     }
 }
+
+exports.finishedBooksList= async (req, res) => {
+    try {
+        const { userId } = req.userData;
+        const books = await ReadingList.find({ user: userId ,status:"finished"}).populate("book")
+
+        res.status(200).json({
+            success: true,
+            message: "reading list fetched successfully",
+            books
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}

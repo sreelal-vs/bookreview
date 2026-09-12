@@ -36,27 +36,55 @@
 
 
 @media (max-width: 825px) {
-   .star,.star-active{
-     font-size: 13px;
-   }
-   
+
+    .star,
+    .star-active {
+        font-size: 13px;
+    }
+
+    .collection-name {
+        font-size: 90px !important;
+    }
+
+    .commment-time {
+        font-size: 15px;
+    }
 }
-.star-active{
+
+@media (max-width:500px) {
+
+    .collection-name {
+        font-size: 40px !important;
+    }
+
+    .commment-time {
+        font-size: 10px;
+    }
+}
+
+.star-active {
     color: rgb(234, 199, 2);
-   }
-.review-btn{
+}
+
+.review-btn {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 14px;
     color: rgba(0, 0, 0, 0.689);
     border-radius: 3px;
 }
-.review-btn:hover{
+
+.review-btn:hover {
     cursor: pointer;
 }
 
-.time{
+.time {
     font-size: 10px;
 }
-.collection-name{
+
+.collection-name {
     font-size: 150px;
+}
+
+.review-content {
+    border: solid 1px black;
 }

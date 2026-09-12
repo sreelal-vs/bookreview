@@ -1,0 +1,14 @@
+.profiles-details-size{
+    font-size: 12px;
+}
+
+@media (max-width:500px){
+    .profile-picture{
+        height: 100px;
+        width: 100px;
+
+    }
+}
+.user-name{
+    font-size: 44px;
+}

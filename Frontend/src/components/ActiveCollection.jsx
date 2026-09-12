@@ -15,7 +15,9 @@ import CollectionCover from "./CollectionCover";
 const ActiveCollection = () => {
     const { id } = useParams();
     const location = useLocation();
-    const domColor = location.state.colour
+    const [backupDom,setBackupDom] = useState(null);
+    const domColor = location.state.colour ?? backupDom;
+
 
     const dispatch = useDispatch()
     const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -90,17 +92,17 @@ const ActiveCollection = () => {
         < div className=" d-flex flex-column align-items-center flex-grow-1 justify-content-center py-5 px-3" style={{ background: `linear-gradient(180deg, rgb(${domColor}) 0%, transparent 100%)` }} >
 
             <div style={{ display: domColor ? 'none' : 'block', position: 'absolute', opacity: 0, pointerEvents: 'none' }}>
-                <CollectionCover height={300} width={250} Initialbooks={books} />
+                <CollectionCover height={300} width={250} Initialbooks={books} setDomColour={setBackupDom}/>
             </div>
 
-            {loading || !domColor ? (<Row className="loading justify-content-center align-items-center w-100">
+            {loading || domColor == null ? (<Row className="loading justify-content-center align-items-center w-100">
                 <Spinner animation="border" role="status" >
                     <span className="visually-hidden ">Loading...</span>
                 </Spinner>
             </Row>) : (
                 <div className="w-100 section-size">
-                    <div className="mb-5 py-3 px-5 d-flex justify-content-start w-100 gap-5 bg-body rounded">
-                        <div className="rounded overflow-hidden">
+                    <div className="mb-5 py-3 px-5 d-flex justify-content-start  w-100 gap-5 bg-body rounded">
+                        <div className="rounded overflow-hidden" style={{maxWidth:"300px"}}>
                             <CollectionCover height={300} width={250} Initialbooks={books} />
                         </div>
                         <div className="d-flex flex-column justify-content-end">

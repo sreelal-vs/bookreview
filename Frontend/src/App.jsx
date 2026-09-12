@@ -16,6 +16,8 @@ import Profile from './pages/Profile';
 import Library from './pages/Library';
 import FavouriteBooks from './pages/FavouriteBooks';
 import ActiveCollection from './components/ActiveCollection';
+import ProtectedRoute from './assets/ProtectedRoute';
+import Admindashboard from './pages/Admindashboard';
 
 
 
@@ -43,6 +45,11 @@ function App() {
           <Route path='/library' element={<Library/>}/>
           <Route path='/favourites' element={<FavouriteBooks/>}/>
           <Route path='/current-collection/:id' element={<ActiveCollection/>}/>
+          <Route path='/admin-dashboard' element={
+            <ProtectedRoute adminOnly={true}>
+              <Admindashboard/>
+            </ProtectedRoute>
+          }/>
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -13,7 +13,7 @@ import { getBookCollectionsThunk, getFavouriteBooksThunk, updateFavouriteThunk }
 import CollectionDropdown from "../components/CollectionDropdown";
 import StarRating from "../components/StarRating";
 import ReviewModal from "../components/ReviewModal";
-// import Review from "../components/Review";
+
 
 
 
@@ -68,9 +68,8 @@ const Discovery = () => {
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(getListBookThunk())
-            dispatch(getFavouriteBooksThunk())
+            dispatch(getFavouriteBooksThunk());
             dispatch(getBookCollectionsThunk());
-
         }
         return
     }, [dispatch, isAuthenticated])
@@ -139,7 +138,7 @@ const Discovery = () => {
         return (() => {
             clearTimeout(timer)
         })
-    })
+    },[clickedId])
 
     const [reviewingBookId, setReviewingBookId] = useState(null);
 

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef } from "react";
+import defaultCover from "../assets/defaultcover.png";
+import defaultCollectionCover from "../assets/defaultCollectionCover.png";
 
 const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour ,id}) => {
 
 
 
     const canvasRef = useRef(null);
+    const dpr = window.devicePixelRatio;
     const getDominant = useCallback(((ctx, x, y, w, h) => {
         const { data } = ctx.getImageData(x, y, w, h);
 
@@ -34,7 +37,7 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
                 }
             } else {
                 return {
-                    cover: "http://localhost:5173/src/assets/defaultcover.jpg"
+                    cover: defaultCover
                 }
             }
         })
@@ -43,8 +46,9 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
         const halfWidth = width / 2;
         const halfHeight = height / 2;
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width*dpr;
+        canvas.height = height*dpr;
+        ctx.scale(dpr,dpr)
 
         const positons = [
             { x: 0, y: 0 },
@@ -59,7 +63,10 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
                 const img = new Image();
                 img.crossOrigin = "anonymous";
                 img.onload = () => resolve(img);
-                img.onerror = reject;
+                img.onerror = (e)=>{
+                    console.error("image failed to paint",src,e)
+                    reject(e);
+                }
                 img.src = src
 
             });
@@ -73,10 +80,10 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
                     const { x, y } = positons[i];
                     ctx.drawImage(image, x, y, halfWidth, halfHeight)
                 })
-                getDominant(ctx, 0, 0, width, height);
+                getDominant(ctx, 0, 0, width*dpr, height*dpr);
             }).catch((err) => console.error("Failed to load mosaic images:", err))
         return () => { cancelled = true }
-    }, [Initialbooks, height, width,getDominant]);
+    }, [Initialbooks, height, width,getDominant,dpr]);
 
 
 
@@ -92,22 +99,24 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
                 }
             } else {
                 return {
-                    cover: "http://localhost:5173/src/assets/defaultcover.jpg"
+                    cover: defaultCover
                 }
             }
         })
         if (books.length > 3) return;
         var src;
         if (books.length === 0) {
-            src = "http://localhost:5173/src/assets/defaultCollectionCover.png";
+            src = defaultCollectionCover;
         }
         else {
             src = books.at(-1).cover;
         }
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        canvas.width = width,
-            canvas.height = height;
+        canvas.width = width*dpr;
+        canvas.height = height*dpr;
+        ctx.scale(dpr,dpr)
+
 
 
         const loadImage = (src) => {
@@ -126,7 +135,7 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
                 if (cancelled) return;
 
                 ctx.drawImage(img, 0, 0, width, height);
-                getDominant(ctx, 0, 0, width, height);
+                getDominant(ctx, 0, 0, width*dpr, height*dpr);
 
             } catch (error) {
                 console.error("Failed to draw the pic", error);
@@ -134,9 +143,13 @@ const CollectionCover = ({ Initialbooks, width = 300, height = 420, setDomColour
         }
         draw();
         return () => { cancelled = true }
-    }, [Initialbooks, height, width,getDominant])
+    }, [Initialbooks, height, width,getDominant,dpr])
     return (
-        <canvas ref={canvasRef} className="h-100" ></canvas>
+        <canvas ref={canvasRef}  style={{
+            width:"100%",
+            height:"auto",
+            aspectRatio:`${width} / ${height}`
+        }}></canvas>
     )
 
 }

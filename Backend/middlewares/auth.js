@@ -24,3 +24,25 @@ exports.authenticate = async (req,res,next)=>{
         })
     }
 }
+
+exports.authorization = (...roles) =>{
+    return (req,res,next)=>{
+        try {
+            const {userRole} = req.userData;
+        if(roles.includes(userRole)){
+            next()
+        }
+        else{
+            return res.status(401).json({
+                success:false,
+                message:"unauthorized route"
+            })
+        }
+        } catch (error) {
+             return res.status(500).json({
+                success:false,
+                message:error.message
+            })
+        }
+    }
+}

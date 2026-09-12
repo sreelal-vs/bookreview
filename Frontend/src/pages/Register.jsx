@@ -1,12 +1,14 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup"
 import "../styles/App.css"
-import {useDispatch} from "react-redux"
-import {useNavigate} from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { userRegisterThunk } from "../Redux/userSlice";
+import { useRef, useState } from "react";
+import defaultPic from "../assets/defaultPic.jpg"
 const Register = () => {
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const schema = yup.object().shape({
@@ -16,18 +18,37 @@ const Register = () => {
         profilePic: yup.mixed(),
 
     });
-    const handleData = async (values)=>{
+    const fileRef = useRef(null)
+    const handleData = async (values,{setFieldError}) => {
 
         const formData = new FormData();
 
-        formData.append("fullname",values.fullname);
-        formData.append("email",values.email);
-        formData.append("password",values.password);
-        formData.append("profilePic",values.profilePic);
-                
-        dispatch(userRegisterThunk(formData));
-        navigate('/signin');
-        
+        formData.append("fullname", values.fullname);
+        formData.append("email", values.email);
+        formData.append("password", values.password);
+        formData.append("profilePic", values.profilePic);
+
+        dispatch(userRegisterThunk(formData)).unwrap().then(() => {
+            navigate('/signin');
+
+        }).catch((data)=>{
+            setFieldError(data.field,data.error)
+        })
+
+    }
+    const [preview, setPreview] = useState(null);
+    const handlePreviewChange = (e) => {
+        const file = e.target.files[0];
+
+
+        if (file) {
+            setPreview(URL.createObjectURL(file))
+        }
+        console.log(preview);
+
+    }
+    const handleClick = () => {
+        fileRef.current.click();
     }
     return (
         <div className="d-flex justify-content-center align-items-center py-5 flex-grow-1">
@@ -43,9 +64,29 @@ const Register = () => {
                             proficPic: null
                         }}
                     >
-                        {({ handleSubmit, handleChange, values, touched, errors ,setFieldValue}) => (
+                        {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
                             <Form noValidate onSubmit={handleSubmit}>
                                 <Row className="mb-3 justify-content-center">
+                                    <Form.Group controlId="formFile" className="mb-3 d-flex justify-content-center">
+
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            name="profilePic"
+                                            ref={fileRef}
+                                            onChange={(event) => {
+                                                setFieldValue('profilePic', event.currentTarget.files[0])
+                                                handlePreviewChange(event);
+                                            }}
+                                            hidden
+                                        />
+                                        {preview ? (
+                                            <Image onClick={handleClick} src={preview} roundedCircle height="160px" width="160px" />
+
+                                        ) : (
+                                            <Image onClick={handleClick} src={defaultPic} roundedCircle height="160px" width="160px" />
+                                        )}
+                                    </Form.Group>
                                     <Form.Group controlId="validationFormik01">
                                         <Form.Label>Full Name</Form.Label>
                                         <Form.Control
@@ -57,9 +98,7 @@ const Register = () => {
                                             isValid={touched.fullname && !errors.fullname}
                                             isInvalid={touched.fullname && !!errors.fullname}
                                         />
-
                                         <Form.Control.Feedback type="invalid">{errors.fullname}</Form.Control.Feedback>
-
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3 justify-content-center">
@@ -74,7 +113,6 @@ const Register = () => {
                                             isValid={touched.email && !errors.email}
                                             isInvalid={touched.email && !!errors.email}
                                         />
-
                                         <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                                     </Form.Group>
                                 </Row>
@@ -95,17 +133,7 @@ const Register = () => {
 
                                     </Form.Group>
                                 </Row>
-                                <Form.Group controlId="formFile" className="mb-3">
-                                    <Form.Label>Default file input example</Form.Label>
-                                    <Form.Control
-                                     type="file" 
-                                     name="profilePic"
-                                     onChange={(event)=>{
-                                        setFieldValue('profilePic',event.currentTarget.files[0])
-                                     }}
-                                     
-                                     />
-                                </Form.Group>
+
 
                                 <div className="justify-content-center d-flex">
                                     <Button type="submit" className="justify-self-center custom-btn border-0">Register</Button>

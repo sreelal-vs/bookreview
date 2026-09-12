@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoMdStarOutline } from "react-icons/io";
 import { IoStar } from "react-icons/io5";
 
-const StarRating = ({readOnly,starCount=0,onRateChange}) =>{
+const StarRating = ({readOnly,starCount=0,onRateChange,size=20}) =>{
     const totalStars = 5;
     const onRate = (starValue) =>{
         setSelected(starValue)
@@ -37,7 +37,7 @@ const StarRating = ({readOnly,starCount=0,onRateChange}) =>{
                 onMouseEnter={()=>{!readOnly && setHover(i+1)}}
                 onMouseLeave={()=>{!readOnly && setHover(null)}}
                 >
-                    {i<displayValue?<IoStar className="star-active"/>:<IoMdStarOutline className="star"/>
+                    {i<displayValue?<IoStar className="star-active" size={size}/>:<IoMdStarOutline className="star" size={size}/>
 }
                 </span>
             )

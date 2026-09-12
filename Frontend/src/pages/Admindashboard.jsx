@@ -1,124 +1,30 @@
-import { Button, Card, Col, Dropdown, Form, Image, Modal, Nav, Row, Tab, TabContainer, Tabs } from "react-bootstrap"
-import "../styles/profile.css"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useRef, useState } from "react";
-import { addlikeReviewThunk, deleteReviewThunk, updateReviewThunk, userReviewsThunk } from "../Redux/reviewSlice";
-import { finishedBookThunk } from "../Redux/readingListSlice";
-import StarRating from "../components/StarRating";
-import dayjs from "dayjs";
-import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
-import { BsThreeDots } from "react-icons/bs";
-import { FaPencilAlt } from "react-icons/fa";
-import relativeTime from "dayjs/plugin/relativeTime"
-import defaultPic from "../assets/defaultcover.png"
+import { Col, Image, Nav, Row, Tab, TabContainer, Tabs } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import defaultUser from "../assets/defaultPic.jpg"
-import { Formik } from "formik";
-import * as yup from "yup"
-import { useNavigate } from "react-router-dom";
-import { userEditThunk } from "../Redux/userSlice";
-import { truncateText } from "../assets/assetsFunction";
-const Profile = () => {
+
+const Admindashboard = () => {
     const { user } = useSelector(state => state.auth);
-    const { reviews } = useSelector(state => state.review);
-    const { readListBooks } = useSelector(state => state.Library);
-    const [editModal, setEditModal] = useState(false);
-    const [textArea, setTextArea] = useState("");
-    const [updateStarValue, setUpdatedStarValue] = useState(0);
-    const [reviewId, setReviewId] = useState(null);
-    const [tab, setTab] = useState("profile");
 
-    const handleEditContent = (index) => {
-        setTextArea(reviews[index].content);
-        setUpdatedStarValue(reviews[index].rating);
-        setEditModal(true)
-        setReviewId(reviews[index]._id);
-    }
-    const handleLike = (user, reviewId) => {
-        dispatch(addlikeReviewThunk({ user, reviewId }));
-    }
-    const handleEdit = (e) => {
-        e.preventDefault();
-        const reviewData = {
-            review: e.target.review.value,
-            reviewId,
-            starCount: updateStarValue
-        }
-        dispatch(updateReviewThunk(reviewData))
-
-    }
-    dayjs.extend(relativeTime);
-    const handleDelete = (id) => {
-        dispatch(deleteReviewThunk(id))
-    }
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(userReviewsThunk())
-        dispatch(finishedBookThunk())
-    }, [dispatch])
-
-
-
-
-    // edit user setup
-
-
-
-    const schema = yup.object().shape({
-        fullname: yup.string().required("full name is required"),
-        profilePic: yup.mixed(),
-
-    });
-    const fileRef = useRef(null)
-    const handleData = async (values) => {
-
-        const formData = new FormData();
-
-        formData.append("fullname", values.fullname);
-        formData.append("profilePic", values.profilePic);
-        formData.append("prevPic", user.profilePic);
-
-        dispatch(userEditThunk(formData))
-        // ).unwrap().then(() => {
-        //     navigate('/signin');
-
-        // }).catch((data) => {
-        //     setFieldError(data.field, data.error)
-        // })
-        setTab("profile")
-
-    }
-    const [preview, setPreview] = useState(
-        user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${user.profilePic}` : defaultUser
-    );
-
-    const handlePreviewChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setPreview(URL.createObjectURL(file))
-        }
-
-
-    }
-    const handleClick = () => {
-        fileRef.current.click();
-    }
     return (
         <div className="flex-grow-1 d-flex justify-content-center">
             {user && (
-                <TabContainer activeKey={tab} className="">
+                <TabContainer defaultActiveKey="" className="">
                     <Row className="section-size px-3 px-xxl-0 ">
                         <Col className="col-lg-3 col-sm-2 col-3">
                             <Nav className="d-flex flex-column pt-5" variant="underline">
                                 <Nav.Item >
-                                    <Nav.Link eventKey="profile" onClick={() => { setTab("profile") }}>Profile</Nav.Link>
+                                    <Nav.Link eventKey="dashboard" >Dashboard</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item >
-                                    <Nav.Link eventKey="editprofile" onClick={() => { setTab("editprofile") }}>
+                                    <Nav.Link eventKey="flagged-comments" >
+                                        flagged comments
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item >
+                                    <Nav.Link eventKey="flagged-comments" >
                                         Edit Profile
                                     </Nav.Link>
-
                                 </Nav.Item>
-
                             </Nav>
                         </Col>
                         <Col className="d-flex flex-column">
@@ -134,11 +40,11 @@ const Profile = () => {
                                             <hr />
                                             <div className="d-flex gap-2 mono fw-medium profiles-details-size">
                                                 <div className="d-flex flex-column">
-                                                    <span className="text-center fs-2">{readListBooks.length}</span>
+                                                    {/* <span className="text-center fs-2">{readListBooks.length}</span> */}
                                                     <span >BOOKS READ</span>
                                                 </div>
                                                 <div className="d-flex flex-column">
-                                                    <span className="text-center fs-2">{reviews.length}</span>
+                                                    {/* <span className="text-center fs-2">{reviews.length}</span> */}
                                                     <span>REVIEWS</span>
                                                 </div>
                                             </div>
@@ -151,7 +57,7 @@ const Profile = () => {
                                                 defaultActiveKey="reviews"
                                             >
                                                 <Tab eventKey="reviews" title="Reviews">
-                                                    {reviews.map((review, i) => {
+                                                    {/* {reviews.map((review, i) => {
                                                         const isLiked = review?.likes.some(id => String(id) === String(user._id)) || false;
 
                                                         return <Card key={review._id} className="bottomborder w-100 p-3 my-2">
@@ -225,11 +131,11 @@ const Profile = () => {
                                                                 <p className="m-0 mono fw-medium text-black-50">{review.likes ? review.likes.length : ""} likes </p>
                                                             </div>
                                                         </Card>
-                                                    })}
+                                                    })} */}
                                                 </Tab>
                                                 <Tab eventKey="finishedbooks" title="Finished Books">
-                                                    <Row  xs={2} sm={3} lg={4}>
-                                                        {readListBooks.map((item, i) => (
+                                                    <Row xs={2} sm={3} lg={4}>
+                                                        {/* {readListBooks.map((item, i) => (
                                                             <Col key={i}>
 
                                                                 <Card className="border-0">
@@ -240,14 +146,14 @@ const Profile = () => {
                                                                     <Card.Body>
                                                                         <Card.Title className="libre-heading">{truncateText(item.book.title, 20)}</Card.Title>
                                                                         <Card.Subtitle className="mt-1 text-black-50">{item.book.author}</Card.Subtitle>
-                                                                          
-                                                                                <StarRating readOnly={true} starCount={item.book.avgrating} />
-                                                                            
+
+                                                                        <StarRating readOnly={true} starCount={item.book.avgrating} />
+
 
                                                                     </Card.Body>
                                                                 </Card>
                                                             </Col>
-                                                        ))}
+                                                        ))} */}
                                                     </Row>
                                                 </Tab>
 
@@ -257,60 +163,7 @@ const Profile = () => {
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="editprofile" className="py-5">
 
-                                    <Formik
-                                        validationSchema={schema}
-                                        onSubmit={handleData}
-                                        initialValues={{
-                                            fullname: user.name,
-                                            proficPic: user.profilePic
-                                        }}
-                                    >
-                                        {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
-                                            <Form noValidate onSubmit={handleSubmit}>
-                                                <Row className="mb-3 justify-content-center">
-                                                    <Form.Group controlId="formFile" className="mb-3 d-flex justify-content-center">
-
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            name="profilePic"
-                                                            ref={fileRef}
-                                                            onChange={(event) => {
-                                                                setFieldValue('profilePic', event.currentTarget.files[0])
-                                                                handlePreviewChange(event);
-                                                            }}
-                                                            hidden
-                                                        />
-
-                                                        <Image onClick={handleClick} src={preview} roundedCircle height="160px" width="160px" />
-
-
-
-
-                                                    </Form.Group>
-                                                    <Form.Group controlId="validationFormik01">
-                                                        <Form.Label>Full Name</Form.Label>
-                                                        <Form.Control
-                                                            required
-                                                            type="text"
-                                                            name="fullname"
-                                                            value={values.fullname}
-                                                            onChange={handleChange}
-                                                            isValid={touched.fullname && !errors.fullname}
-                                                            isInvalid={touched.fullname && !!errors.fullname}
-                                                        />
-                                                        <Form.Control.Feedback type="invalid">{errors.fullname}</Form.Control.Feedback>
-                                                    </Form.Group>
-                                                </Row>
-
-
-
-                                                <div className="justify-content-center d-flex">
-                                                    <Button type="submit" className="justify-self-center custom-btn border-0">Save changes</Button>
-                                                </div>
-                                            </Form>
-                                        )}
-                                    </Formik>
+                                   
 
                                 </Tab.Pane>
                             </Tab.Content>
@@ -321,8 +174,6 @@ const Profile = () => {
             )}
         </div>
     )
-
 }
 
-
-export default Profile
+export default Admindashboard

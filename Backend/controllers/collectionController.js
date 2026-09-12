@@ -198,7 +198,7 @@ exports.getCurrentCollection = async (req, res) => {
             })
         }
           const currentCollection = await Collections.findById(id).populate("books")
-        console.log(currentCollection);
+        
         
 
         return res.status(200).json({

@@ -7,8 +7,6 @@ const initialState = {
     reviews: [],
     loading: false,
     error: null,
-    message: ""
-
 }
 
 export const getReviewsThunk = createAsyncThunk(
@@ -75,7 +73,7 @@ export const deleteReviewThunk = createAsyncThunk(
 
 
             const { data } = await instance.delete("review/delete", {
-                params:{id:id},
+                params: { id: id },
                 withCredentials: true
             })
 
@@ -83,6 +81,64 @@ export const deleteReviewThunk = createAsyncThunk(
         } catch (error) {
 
             return rejectWithValue(error?.response?.data || "Failed to  delete the review")
+        }
+    }
+)
+
+export const addlikeReviewThunk = createAsyncThunk(
+    "add/like/Review",
+    async ({ user, reviewId }, { rejectWithValue }) => {
+        try {
+
+
+
+
+            const { data } = await instance.patch("review/add/like", { user, reviewId }, {
+
+                withCredentials: true
+            })
+
+            return data;
+        } catch (error) {
+
+            return rejectWithValue(error?.response?.data || "Failed to  add like")
+        }
+    }
+)
+export const deletelikeReviewThunk = createAsyncThunk(
+    "delete/like/Review",
+    async ({ user, reviewId }, { rejectWithValue }) => {
+        try {
+
+
+
+
+            const { data } = await instance.delete("review/add/like", {
+                params: { user, reviewId },
+                withCredentials: true
+            })
+
+            return data;
+        } catch (error) {
+
+            return rejectWithValue(error?.response?.data || "Failed to  delete like")
+        }
+    }
+)
+
+export const userReviewsThunk = createAsyncThunk(
+    "get/user/Reviews",
+    async (_, { rejectWithValue }) => {
+        try {
+
+            const { data } = await instance.get("review/get/user/reviews", {
+                withCredentials: true
+            })
+
+            return data;
+        } catch (error) {
+
+            return rejectWithValue(error?.response?.data || "Failed to  get the reviews")
         }
     }
 )
@@ -129,7 +185,6 @@ const reviewSlice = createSlice({
             state.loading = false;
             state.error = null;
             const { newreviewContent, reviewId, newRating } = action.payload;
-            console.log(newRating);
 
             const review = state.reviews.find(b => b._id === reviewId)
             if (review) {
@@ -152,6 +207,35 @@ const reviewSlice = createSlice({
 
 
         }).addCase(deleteReviewThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase(addlikeReviewThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(addlikeReviewThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            const { user, reviewId } = action.payload;
+
+            const review = state.reviews.find(review => review._id === reviewId)
+            const index = review.likes.findIndex((id) => id === user);
+            if (index == -1) {
+                review.likes.push(user)
+            } else {
+                review.likes.splice(index,1)
+            }
+
+        }).addCase(addlikeReviewThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase(userReviewsThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(userReviewsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.reviews = action.payload.reviews;
+        }).addCase(userReviewsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })

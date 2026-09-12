@@ -2,13 +2,12 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const Collections = require("../models/collectionModel");
-
+const path = require("path");
+const fs = require("fs")
 exports.userRegister = async (req, res) => {
     try {
         const { fullname, email, password } = req.body;
-        const profilePic = req.file?.path;
-
-
+        const profilePic = req.file?.filename;
         if (!fullname || !email || !password) {
 
             return res.status(400).json({
@@ -28,9 +27,9 @@ exports.userRegister = async (req, res) => {
 
         const user = await User.create(userData);
         await Collections.create({
-            user:user._id,
-            collectionName:"Favourites",
-            books:[]
+            user: user._id,
+            collectionName: "Favourites",
+            books: []
         })
         res.status(200).json({
             success: true,
@@ -38,7 +37,20 @@ exports.userRegister = async (req, res) => {
             user
         })
     } catch (error) {
+        const mongoErr = error.cause || error;
+        if (mongoErr.code === 11000) {
+            const field = Object.keys(mongoErr.keyPattern)[0];
+            return res.status(500).json({
+                field,
+                success: false,
+                error: `${field} already exists`
+            })
+        }
+
+
+
         res.status(500).json({
+
             success: false,
             error: error.message
         })
@@ -92,6 +104,8 @@ exports.userLogin = async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
+            profilePic: user.profilePic ?? null,
+            role:user.role
         }
         const token = jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
 
@@ -104,25 +118,26 @@ exports.userLogin = async (req, res) => {
             user: safeUser
         })
     } catch (error) {
+
         res.status(500).json({
             success: false,
             error: error.message
         })
     }
 }
-exports.userLogOut =async (req,res)=>{
-    try {                
-        res.status(200).clearCookie("token",{
-            httpOnly:true,
-            path:'/'
+exports.userLogOut = async (req, res) => {
+    try {
+        res.status(200).clearCookie("token", {
+            httpOnly: true,
+            path: '/'
         }).json({
-            success:true,
-            message:"User Logout successfully"
+            success: true,
+            message: "User Logout successfully"
         })
     } catch (error) {
         res.status(500).json({
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
         })
     }
 }
@@ -131,15 +146,15 @@ exports.getCurrentUser = async (req, res) => {
 
 
         const token = req.cookies.token;
-        
+
         if (!token) {
             return res.status(401).json({
                 success: false,
                 message: "Token not found"
             })
         }
-        
-        
+
+
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         const user = await User.findById(decoded.userId);
@@ -150,6 +165,47 @@ exports.getCurrentUser = async (req, res) => {
         })
 
 
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        })
+    }
+}
+exports.editUser = async (req, res) => {
+    try {
+        const { fullname ,prevPic} = req.body;
+        const {userId} = req.userData;
+        const profilePic = req.file?.filename;
+        const filePath = path.join(__dirname,"..","Uploads",prevPic);
+        await fs.unlink(filePath,((err)=>{
+            if(err){
+                console.error(err);
+            }
+        }))
+
+        const updatedUser = await User.findByIdAndUpdate(userId,{
+            name:fullname,
+            profilePic,
+        },{returnDocument:"after"});
+
+        res.status(200).json({
+            success: true,
+            error: "user updated successfully",
+            user:updatedUser
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        })
+    }
+
+
+}
+exports.deletePrevPFP = async ( req,res)=>{
+    try {
+        console.log(req.body)
     } catch (error) {
         res.status(500).json({
             success: false,

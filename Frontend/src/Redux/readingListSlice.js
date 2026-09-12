@@ -1,20 +1,20 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import instance from "../api/axios";
 
 const initialState = {
-    loading:false,
-    error:null,
-    readingList:[],
-    readListBooks:[]
+    loading: false,
+    error: null,
+    readingList: [],
+    readListBooks: []
 
 }
 
 export const getListBookThunk = createAsyncThunk(
     "get/list/books",
-    async (_,{rejectWithValue})=>{
+    async (_, { rejectWithValue }) => {
         try {
-            const {data} = await instance.get("readingstatus/getReadingList",{
-                withCredentials:true
+            const { data } = await instance.get("readingstatus/getReadingList", {
+                withCredentials: true
             })
             return data;
         } catch (error) {
@@ -24,12 +24,12 @@ export const getListBookThunk = createAsyncThunk(
 )
 export const updateStatusThunk = createAsyncThunk(
     "update/Status",
-    async (updationData,{rejectWithValue})=>{
+    async (updationData, { rejectWithValue }) => {
         try {
-            
-            
-            const {data} = await instance.patch("readingstatus/updateStatus",updationData,{
-                withCredentials:true
+
+
+            const { data } = await instance.patch("readingstatus/updateStatus", updationData, {
+                withCredentials: true
             })
             return data;
         } catch (error) {
@@ -39,17 +39,17 @@ export const updateStatusThunk = createAsyncThunk(
 )
 export const getReadListBooksThunk = createAsyncThunk(
     "readlist/Books",
-    async ({readingStatus,sortOrder,sortValue},{rejectWithValue})=>{
+    async ({ readingStatus, sortOrder, sortValue }, { rejectWithValue }) => {
         try {
-            
-          
-            
-            const {data} = await instance.get("readingstatus/readlist-books",{
-                withCredentials:true,
-                params:{
-                    readingstatus:readingStatus,
-                    sortOrder:sortOrder,
-                    sortValue:sortValue
+
+
+
+            const { data } = await instance.get("readingstatus/readlist-books", {
+                withCredentials: true,
+                params: {
+                    readingstatus: readingStatus,
+                    sortOrder: sortOrder,
+                    sortValue: sortValue
                 }
             })
             return data;
@@ -60,13 +60,13 @@ export const getReadListBooksThunk = createAsyncThunk(
 )
 export const deleteListBookThunk = createAsyncThunk(
     "readlist/Book/delete",
-    async (id,{rejectWithValue})=>{
+    async (id, { rejectWithValue }) => {
         try {
-            
-          
-            
-            const {data} = await instance.get(`readingstatus/readlist-book/delete/${id}`,{
-                withCredentials:true
+
+
+
+            const { data } = await instance.get(`readingstatus/readlist-book/delete/${id}`, {
+                withCredentials: true
             })
             return data;
         } catch (error) {
@@ -74,57 +74,81 @@ export const deleteListBookThunk = createAsyncThunk(
         }
     }
 )
-
+export const finishedBookThunk = createAsyncThunk(
+    "finished/Books",
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await instance.get("readingstatus/finishedBooks", {
+                withCredentials: true
+            })
+            return data
+        } catch (error) {
+            return rejectWithValue(error?.response?.data || "failed to get finished books failed")
+        }
+    }
+)
 
 const readingListSlice = createSlice({
-    name:"bookcollection",
+    name: "bookcollection",
     initialState,
-    reducers:{},
-    extraReducers:(builder)=>{
-       builder.addCase(getListBookThunk.pending,(state)=>{
-        state.loading = true;
-       }).addCase(getListBookThunk.fulfilled,(state,action)=>{
-        state.loading = false;
-        state.readingList = action.payload.readingList
-       }).addCase(getListBookThunk.rejected,(state,action)=>{
-        state.loading = false;
-        state.error = action.payload
-       }).addCase(updateStatusThunk.pending,(state)=>{
-        state.loading = true;
-       }).addCase(updateStatusThunk.fulfilled,(state,action)=>{
-        state.loading = false;
-        state.readingList = action.payload.readingList;
-        state.readListBooks = action.payload.readingList;
-        
-        
-       }).addCase(updateStatusThunk.rejected,(state,action)=>{
-        state.loading = false;
-        state.error = action.payload
-       }).addCase(getReadListBooksThunk.pending,(state)=>{
-        state.loading = true;
-       }).addCase(getReadListBooksThunk.fulfilled,(state,action)=>{
-        state.loading = false;
-        state.readListBooks = action.payload.result;
-       }).addCase(getReadListBooksThunk.rejected,(state,action)=>{
-        state.loading = false;
-        state.error = action.payload
-       }).addCase(deleteListBookThunk.pending,(state)=>{
-        state.loading = true;
-       }).addCase(deleteListBookThunk.fulfilled,(state,action)=>{
-        state.loading = false;
-      
-        const index = state.readListBooks.findIndex((item)=>
-            item._id == action.payload.deletedBookId
-        );
-        state.readListBooks.splice(index,1);
-        
-        
-       }).addCase(deleteListBookThunk.rejected,(state,action)=>{
-        state.loading = false;
-        state.error = action.payload
-       })
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(getListBookThunk.pending, (state) => {
+            state.loading = true;
+        }).addCase(getListBookThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.readingList = action.payload.readingList
+        }).addCase(getListBookThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        }).addCase(updateStatusThunk.pending, (state) => {
+            state.loading = true;
+        }).addCase(updateStatusThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.readingList = action.payload.readingList;
+            state.readListBooks = action.payload.readingList;
+
+
+        }).addCase(updateStatusThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        }).addCase(getReadListBooksThunk.pending, (state) => {
+            state.loading = true;
+        }).addCase(getReadListBooksThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.readListBooks = action.payload.result;
+        }).addCase(getReadListBooksThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        }).addCase(deleteListBookThunk.pending, (state) => {
+            state.loading = true;
+        }).addCase(deleteListBookThunk.fulfilled, (state, action) => {
+            state.loading = false;
+
+            const index = state.readListBooks.findIndex((item) =>
+                item._id == action.payload.deletedBookId
+            );
+            state.readListBooks.splice(index, 1);
+
+
+        }).addCase(deleteListBookThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        }).addCase(finishedBookThunk.pending, (state) => {
+            state.loading = true;
+        }).addCase(finishedBookThunk.fulfilled, (state, action) => {
+            state.loading = false;
+
+            
+            state.readListBooks = action.payload.books;
+
+
+        }).addCase(finishedBookThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        })
     }
-    }
+}
 )
 
 

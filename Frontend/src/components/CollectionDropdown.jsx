@@ -6,14 +6,14 @@ import ModalComponent from "./ModalComponent"
 import { useState } from "react"
 import { addItemCollectionThunk } from "../Redux/bookCollectionSlice"
 
-const CollectionDropdown  = ({bookId}) => {
-    
-    
-    const {collections} = useSelector((state) => state.collection);
-    const [modalShow,setModalShow] = useState(false)
+const CollectionDropdown = ({ bookId }) => {
+
+
+    const { collections } = useSelector((state) => state.collection);
+    const [modalShow, setModalShow] = useState(false)
     const dispatch = useDispatch();
-    const handleAddtoCollection = (collectionId) =>{
-        dispatch(addItemCollectionThunk({collectionId,bookId}))
+    const handleAddtoCollection = (collectionId) => {
+        dispatch(addItemCollectionThunk({ collectionId, bookId }))
     }
     return (
         <Dropdown className="align-self-center readlist-drop">
@@ -25,19 +25,23 @@ const CollectionDropdown  = ({bookId}) => {
 
                 <Dropdown.Item as="div" onClick={(e) => e.stopPropagation()}>
                     <Dropdown className="align-self-center ">
-                        <Dropdown.Toggle style={{cursor:"pointer"}} as="div" id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent p-0">
+                        <Dropdown.Toggle style={{ cursor: "pointer" }} as="div" id="dropdown-autoclose-true" className="border-0 rounded-0 bg-transparent p-0">
                             <TiPlus className="mb-1" />
-
                             Add to collection
                         </Dropdown.Toggle>
 
-                        <Dropdown.Menu className="p-0">
+
+                        {collections.length < 1 ? (<Dropdown.Menu className="p-0">
+                            <Dropdown.Item>
+                                No Collections created
+                            </Dropdown.Item>
+                        </Dropdown.Menu>) : (<Dropdown.Menu className="p-0">
                             {collections.map(collection => (
                                 <Dropdown.Item onClick={() => { handleAddtoCollection(collection._id) }} key={collection._id}>
                                     {collection.collectionName}
                                 </Dropdown.Item>
                             ))}
-                        </Dropdown.Menu>
+                        </Dropdown.Menu>)}
                     </Dropdown>
 
                 </Dropdown.Item>

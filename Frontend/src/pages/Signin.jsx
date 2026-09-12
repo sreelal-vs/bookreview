@@ -15,16 +15,14 @@ const Signin = () => {
 
     });
 
-    const handleData = (values,{setFieldError}) =>{
-        
-        dispatch(userLoginThunk(values)).unwrap().then(()=>{
-                   navigate('/')   
-        }).catch((data)=>{
-            
-            
-            setFieldError(data.field,data.message)
-            
+    const handleData = (values,{setFieldError}) =>{    
+        dispatch(userLoginThunk(values)).unwrap().then(()=>{    
+            navigate('/')             
+        }).catch((data)=>{  
+                    
+            setFieldError(data.field,data.message)         
         })
+           
     }
     return (
         <div className=" d-flex flex-column align-items-center flex-grow-1 justify-content-center py-5">

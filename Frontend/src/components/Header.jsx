@@ -21,10 +21,11 @@ function Header() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const handleLogout = () =>{
-        
+    const handleLogout = () => {
+
         handleClose();
         dispatch(userLogoutThunk());
+        navigate('/');
     }
 
 
@@ -61,7 +62,7 @@ function Header() {
                             onClick={() => {
                                 !showSearch && setExpanded(false)
                                 setShowSearch(!showSearch)
-                                {showSearch&&dispatch(addQuery(""))}
+                                { showSearch && dispatch(addQuery("")) }
                             }}
                             className="d-lg-none ms-auto"
                         ><IoIosSearch size={25} /></Nav.Link>
@@ -71,7 +72,7 @@ function Header() {
                             isAuthenticated ?
                                 (
                                     <div className="d-lg-none d-block ms-3">
-                                        <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle onClick={handleShow} />
+                                        <Image src={user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${user.profilePic}` : `${import.meta.env.VITE_BASEURL}/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle onClick={handleShow} />
 
                                         <Offcanvas show={show} onHide={handleClose} placement="end" className="custom-offcan">
                                             <Offcanvas.Header closeButton>
@@ -79,7 +80,7 @@ function Header() {
                                             </Offcanvas.Header>
                                             <Offcanvas.Body className="pt-0">
                                                 <div className="d-flex flex-column align-items-center">
-                                                    <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="100px" width="100px" roundedCircle />
+                                                    <Image src={user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${user.profilePic}` : `${import.meta.env.VITE_BASEURL}/Uploads/defaultPic.jpg`} height="100px" width="100px" roundedCircle />
                                                     <h5>Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
                                                 </div>
                                                 <ListGroup className="pt-4">
@@ -115,11 +116,11 @@ function Header() {
                             (
                                 <Dropdown align="end" className="d-lg-block d-none ms-3">
                                     <DropdownToggle as="div" >
-                                        <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="50px" width="50px" roundedCircle />
+                                        <Image src={user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${user.profilePic}` : `${import.meta.env.VITE_BASEURL}/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <div className="d-flex flex-column p-3 align-items-center">
-                                            <Image src={user.profilePic ? `http://localhost:5000/${user.profilePic}` : `http://localhost:5000/Uploads/defaultPic1.jpg`} height="50px" width="50px" roundedCircle />
+                                            <Image src={user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${user.profilePic}` : `${import.meta.env.VITE_BASEURL}/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle />
                                             <h5 className="m-0"> Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
 
                                             <p className="text-muted small">{user.email}</p>
@@ -128,6 +129,10 @@ function Header() {
                                         <Dropdown.Item>Manage account</Dropdown.Item>
                                         <Dropdown.Item onClick={() => { navigate('/library') }}>Library</Dropdown.Item>
                                         <Dropdown.Item onClick={() => { navigate('/profile') }}>Profile</Dropdown.Item>
+                                        {user.role === "admin" && (
+                                            <Dropdown.Item onClick={() => { navigate('/admin-dashboard') }}>Admin Dashboard</Dropdown.Item>
+
+                                        )}
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
 
                                     </DropdownMenu>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../api/axios";
+import { userEditThunk } from "./userSlice";
 
 
 
@@ -15,7 +16,6 @@ export const userLoginThunk = createAsyncThunk(
     "user/Login",
     async (userData, { rejectWithValue }) => {
         try {
-
 
             const { data } = await instance.post("user/login", userData, {
                 withCredentials: true
@@ -72,6 +72,8 @@ const authSlice = createSlice({
             state.error = null;
             state.isAuthenticated = true;
             state.isAuthChecked = true
+            console.log(action.payload.user);
+            
             state.user = action.payload.user;
         }).addCase(userLoginThunk.rejected, (state, action) => {
             state.loading = false;
@@ -100,6 +102,16 @@ const authSlice = createSlice({
             state.isAuthChecked = true;
             state.user = "";
         }).addCase(userLogoutThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase(userEditThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(userEditThunk.fulfilled, (state,action) => {
+            state.loading = false;
+            state.error = null;
+            state.user = action.payload.user;
+        }).addCase(userEditThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })
