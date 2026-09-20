@@ -76,6 +76,25 @@ export const getCommentsThunk = createAsyncThunk(
     }
 )
 
+export const reportUserCommentsThunk = createAsyncThunk(
+    "get/all/report-user/comments",
+    async ({userId}, { rejectWithValue }) => {
+        try {
+            
+            const { data } = await instance.get("comment/report-user/comments", {
+                params:{userId},
+                withCredentials: true
+            })
+
+            return data;
+        } catch (error) {
+            console.log(error);
+            
+            return rejectWithValue(error?.response?.data || "Failed to  get the comments")
+        }
+    }
+)
+
 const commentSlice = createSlice({
     name: "comments",
     initialState,
@@ -136,6 +155,16 @@ const commentSlice = createSlice({
                 comment.isEdited = true
             }
         }).addCase(editReplyThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase(reportUserCommentsThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(reportUserCommentsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.comments = action.payload.comments
+        }).addCase(reportUserCommentsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })

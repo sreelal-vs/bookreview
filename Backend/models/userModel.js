@@ -31,11 +31,20 @@ const userSchema = new mongoose.Schema({
     isBanned:{
         type:Boolean,
         default:false
+    },
+    bannedReason:{
+        type:String,
+    },
+    banExpiry:{
+        type:Date,
+        default:null
     }
 
+},{
+    timestamps:true
 })
 
-userSchema.pre("save",async  () => {
+userSchema.pre("save",async function () {
     if(!this.isModified("password")) return
     this.password = await bcrypt.hash(this.password,10);
 })

@@ -88,3 +88,72 @@
 .review-content {
     border: solid 1px black;
 }
+
+.modal-blur {
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.report-nav {
+    background-color: rgb(239, 237, 237);
+    border-radius: 3px;
+}
+
+.report-nav .nav-link {
+    color: black !important;
+}
+
+.report-nav .nav-link.active,
+.report-nav .show>.nav-link {
+    background-color: white !important;
+    color: black;
+
+}
+
+
+
+.promote-btn,
+.promote-btn:disabled {
+    padding: 2px 9px;
+    justify-self: center;
+    font-family: var(--heading);
+    background-color: green;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+}
+
+.promote-btn:active {
+    background-color: green !important;
+}
+
+.promote-btn:hover {
+    background-color: green;
+    opacity: 0.7;
+    transition: all ease 0.5s;
+}
+
+.demote-btn,
+.promote-btn:disabled {
+    padding: 2px 9px;
+    justify-self: center;
+    font-family: var(--heading);
+    background-color: red;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+}
+
+.demote-btn:active {
+    background-color: red !important;
+}
+
+.demote-btn:hover {
+    background-color: red;
+    opacity: 0.7;
+    transition: all ease 0.5s;
+}
+
+.nav-link{
+    color: black;
+}

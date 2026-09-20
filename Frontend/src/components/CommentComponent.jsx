@@ -7,8 +7,9 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import ReplyForm from "./ReplyForm";
 import EditReplyForm from "./EditReplyForm";
+import ReportWindow from "./ReportWindow";
 
-const CommentComponent = ({ reviewId }) => {
+const CommentComponent = ({ reviewId,blur=null }) => {
     const dispatch = useDispatch();
     dayjs.extend(relativeTime)
     useEffect(() => {
@@ -18,7 +19,9 @@ const CommentComponent = ({ reviewId }) => {
     const { user } = useSelector(state => state.auth);
 
     const [showReplyFormID, setShowReplyFormID] = useState(false)
-    const [editReplyId, setEditReplyId] = useState(false)
+    const [editReplyId, setEditReplyId] = useState(false);
+    const [reportId, setReportId] = useState(null);
+
     const handleDelete = (commentId) => {
         dispatch(deletetCommentThunk(commentId));
     }
@@ -47,25 +50,38 @@ const CommentComponent = ({ reviewId }) => {
                             </Col>
 
                             <Col className="mono  d-flex flex-column col-2 align-items-center p-0">
-                                {user._id === comment.user._id && (
+                              
                                     <Dropdown>
                                         <Dropdown.Toggle className="bg-transparent text-black p-0"><BsThreeDotsVertical /></Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item onClick={() => { handleDelete(comment._id) }}>Delete</Dropdown.Item>
+                                            {user._id === comment.user._id && (<Dropdown.Item onClick={() => { handleDelete(comment._id) }}>Delete</Dropdown.Item>)}
+
+                                            <Dropdown.Item className="text-danger " onClick={() => {
+                                                setReportId(comment._id)
+                                                blur(true);
+                                            }}>Report</Dropdown.Item>
                                         </Dropdown.Menu>
+
+                                        {reportId && (<ReportWindow  reportedFor="comment" show={reportId === comment._id} itemId={reportId} onHide={() => {
+                                                        setReportId(null)
+                                                         blur(false) 
+                                                        }} 
+                                                         onSubmit={() => {
+
+                                                         setReportId(null)
+                                                         blur(false)}}  />)}
                                     </Dropdown>
-                                )}
+                                
 
 
                             </Col>
                         </Row>
                         <Row>
-                            <Col className="col-2"></Col>
-                            <Col className="">
+                            <Col >
                                 <div>
                                     <span style={{ cursor: "pointer" }} onClick={() => { setShowReplyFormID(prev => prev == comment._id ? null : comment._id) }}>Reply</span>
-                                    {user._id === comment.user._id&&(
-                                    <span style={{ cursor: "pointer" }} className="ps-2" onClick={() => { setEditReplyId(prev => prev == comment._id ? null : comment._id) }}>Edit</span>
+                                    {user._id === comment.user._id && (
+                                        <span style={{ cursor: "pointer" }} className="ps-2" onClick={() => { setEditReplyId(prev => prev == comment._id ? null : comment._id) }}>Edit</span>
 
                                     )}
                                 </div>

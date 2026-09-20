@@ -102,13 +102,29 @@ const Profile = () => {
     const handleClick = () => {
         fileRef.current.click();
     }
+    const passwordSchema = yup.object().shape({
+        prevPassword: yup.string().required("Enter your current password"),
+        password: yup
+            .string()
+            .min(8, "At least 8 characters")
+            .required("Enter a new password")
+            .notOneOf([yup.ref("prevPassword")],"New password must be different"),
+        confirmPassword: yup
+            .string()
+            .oneOf([yup.ref("password"),"Password is not matching"])
+            .notOneOf([yup.ref("prevPassword")],"New password must be different")
+            .required("Confirm your new password"),
+    });
+    const handlePasswordChange = (values) => {
+        console.log(values);
+    }
     return (
         <div className="flex-grow-1 d-flex justify-content-center">
             {user && (
-                <TabContainer activeKey={tab} className="">
+                <TabContainer activeKey={tab}>
                     <Row className="section-size px-3 px-xxl-0 ">
                         <Col className="col-lg-3 col-sm-2 col-3">
-                            <Nav className="d-flex flex-column pt-5" variant="underline">
+                            <Nav className="d-flex flex-column pt-5 libre-heading fw-semibold" variant="underline">
                                 <Nav.Item >
                                     <Nav.Link eventKey="profile" onClick={() => { setTab("profile") }}>Profile</Nav.Link>
                                 </Nav.Item>
@@ -116,7 +132,11 @@ const Profile = () => {
                                     <Nav.Link eventKey="editprofile" onClick={() => { setTab("editprofile") }}>
                                         Edit Profile
                                     </Nav.Link>
-
+                                </Nav.Item>
+                                <Nav.Item >
+                                    <Nav.Link eventKey="password" onClick={() => { setTab("password") }}>
+                                        Change password
+                                    </Nav.Link>
                                 </Nav.Item>
 
                             </Nav>
@@ -228,7 +248,7 @@ const Profile = () => {
                                                     })}
                                                 </Tab>
                                                 <Tab eventKey="finishedbooks" title="Finished Books">
-                                                    <Row  xs={2} sm={3} lg={4}>
+                                                    <Row xs={2} sm={3} lg={4}>
                                                         {readListBooks.map((item, i) => (
                                                             <Col key={i}>
 
@@ -240,9 +260,9 @@ const Profile = () => {
                                                                     <Card.Body>
                                                                         <Card.Title className="libre-heading">{truncateText(item.book.title, 20)}</Card.Title>
                                                                         <Card.Subtitle className="mt-1 text-black-50">{item.book.author}</Card.Subtitle>
-                                                                          
-                                                                                <StarRating readOnly={true} starCount={item.book.avgrating} />
-                                                                            
+
+                                                                        <StarRating readOnly={true} starCount={item.book.avgrating} />
+
 
                                                                     </Card.Body>
                                                                 </Card>
@@ -307,6 +327,69 @@ const Profile = () => {
 
                                                 <div className="justify-content-center d-flex">
                                                     <Button type="submit" className="justify-self-center custom-btn border-0">Save changes</Button>
+                                                </div>
+                                            </Form>
+                                        )}
+                                    </Formik>
+
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="password" className="py-5">
+
+                                    <Formik
+                                        validationSchema={passwordSchema}
+                                        onSubmit={handlePasswordChange}
+                                        initialValues={{
+                                            prevPassword: "",
+                                            password: "",
+                                            confirmPassword: ""
+                                        }}
+                                    >
+                                        {({ handleSubmit, handleChange, values, touched, errors,setFieldError}) => (
+                                            <Form noValidate onSubmit={handleSubmit}>
+                                                <Row className="mb-3 justify-content-center">
+
+                                                    <Form.Group controlId="validationFormik01">
+                                                        <Form.Label>Current Password</Form.Label>
+                                                        <Form.Control
+                                                            required
+                                                            type="password"
+                                                            name="prevPassword"
+                                                            value={values.prevPassword}
+                                                            onChange={handleChange}
+                                                            isValid={touched.prevPassword && !errors.prevPassword}
+                                                            isInvalid={touched.prevPassword && !!errors.prevPassword}
+                                                        />
+                                                        <Form.Control.Feedback type="invalid">{errors.prevPassword}</Form.Control.Feedback>
+                                                    </Form.Group>
+                                                    <Form.Group controlId="validationFormik02">
+                                                        <Form.Label>Password</Form.Label>
+                                                        <Form.Control
+                                                            required
+                                                            type="password"
+                                                            name="password"
+                                                            value={values.password}
+                                                            onChange={handleChange}
+                                                            isValid={touched.password && !errors.password}
+                                                            isInvalid={touched.password && !!errors.password}
+                                                        />
+                                                        <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                                                    </Form.Group><Form.Group controlId="validationFormik03">
+                                                        <Form.Label>Confirm Password</Form.Label>
+                                                        <Form.Control
+                                                            required
+                                                            type="password"
+                                                            name="confirmPassword"
+                                                            value={values.confirmPassword}
+                                                            onChange={handleChange}
+                                                            isValid={touched.confirmPassword && !errors.confirmPassword}
+                                                            isInvalid={touched.confirmPassword && !!errors.confirmPassword}
+                                                        />
+                                                        <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
+                                                    </Form.Group>
+                                                </Row>
+
+                                                <div className="justify-content-center d-flex">
+                                                    <Button type="submit" className="justify-self-center custom-btn border-0">Save Password</Button>
                                                 </div>
                                             </Form>
                                         )}

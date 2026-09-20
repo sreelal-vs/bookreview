@@ -4,6 +4,7 @@ const bookRoute = require("./Routes/bookRoute");
 const readingstatusRoute = require("./Routes/readingstatusRoute");
 const commentRoute = require("./Routes/commentRoute");
 const reviewRoute = require("./Routes/reviewRoute");
+const reportRoute = require("./Routes/reportRoute")
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const collectionRoute = require("./Routes/collectionRoute")
@@ -25,5 +26,7 @@ app.use('/api/v1/readingstatus',readingstatusRoute);
 app.use('/api/v1/comment', commentRoute);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/collection',collectionRoute);
+app.use('/api/v1/report',reportRoute);
+
 
 module.exports = app;

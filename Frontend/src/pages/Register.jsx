@@ -14,7 +14,7 @@ const Register = () => {
     const schema = yup.object().shape({
         fullname: yup.string().required("full name is required"),
         email: yup.string().email("Email format is wrong").required("email is required"),
-        password: yup.string().required("Password is required"),
+        password: yup.string().required("Password is required").min(8,"At least 8 characters"),
         profilePic: yup.mixed(),
 
     });

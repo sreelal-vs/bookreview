@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { BsThreeDots } from "react-icons/bs";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import ReplyForm from "./ReplyForm";
+import ReportWindow from "./ReportWindow";
 
 
 
@@ -20,7 +21,7 @@ const ReviewModal = ({ show, onHide, bookId }) => {
     const dispatch = useDispatch();
     const { reviews } = useSelector(state => state.review);
     const { user } = useSelector(state => state.auth);
-  
+
 
     useEffect(() => {
         if (!show) return;
@@ -34,14 +35,16 @@ const ReviewModal = ({ show, onHide, bookId }) => {
     const [textArea, setTextArea] = useState("")
     const [starValue, setStarValue] = useState(0);
     const [showReplyFormID, setShowReplyFormID] = useState(null);
-    const resetFuntion = useCallback(() =>{
+    const [reportId, setReportId] = useState(null);
+
+    const resetFuntion = useCallback(() => {
         setEditModal(false);
         setReviewId(null);
         setShowReplyFormID(null);
         setTextArea(null);
         setStarValue(0);
-    },[])
-    
+    }, [])
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const reviewData = {
@@ -53,7 +56,7 @@ const ReviewModal = ({ show, onHide, bookId }) => {
         e.target.reset();
         setStarValue(0)
     }
-
+    const [blur,setBlur] = useState(false)
     const handleLike = (user, reviewId) => {
         dispatch(addlikeReviewThunk({ user, reviewId }));
     }
@@ -84,11 +87,11 @@ const ReviewModal = ({ show, onHide, bookId }) => {
             size="lg"
             aria-labelledby="contained-modal-title-center"
             centered
-            onHide={()=>{
+            onHide={() => {
                 resetFuntion()
                 onHide()
             }}
-            className="p-0"
+            className={`p-0 ${blur ? ("modal-blur") : ""}`}
         >
             <Modal.Header className="libre-heading" closeButton>Readers Review</Modal.Header>
             <Modal.Body>
@@ -127,50 +130,59 @@ const ReviewModal = ({ show, onHide, bookId }) => {
                                             <span className="time mono">{dayjs(review.createdAt).fromNow()}</span>
                                         </Col>
                                         <Col className="mono flex-grow-0 d-flex flex-column align-items-center">
-                                            {user._id === review.user._id && (
-                                                <Dropdown>
-                                                    <Dropdown.Toggle className="bg-transparent text-black"><BsThreeDots /></Dropdown.Toggle>
-                                                    <Dropdown.Menu>
-                                                        <Dropdown.Item onClick={() => { handleEditContent(i) }}>Edit</Dropdown.Item>
-                                                        <Modal
-                                                            show={editModal}
-                                                            size="lg"
-                                                            aria-labelledby="contained-modal-title-vcenter"
-                                                            centered
-                                                            onHide={() => {
-                                                                setEditModal(false);
-                                                                setTextArea(null);
-                                                            }}
-                                                            className="p-0"
-                                                        >
-                                                            <Modal.Header closeButton>
-                                                                <Modal.Title className="libre-heading text-center flex-grow-1" id="contained-modal-title-vcenter">
-                                                                    Give your collection a name
-                                                                </Modal.Title>
-                                                            </Modal.Header>
-                                                            <Modal.Body>
-                                                                <Form onSubmit={handleEdit}>
-                                                                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                                                        <Form.Label className="libre-heading"><FaPencilAlt />  Write</Form.Label>
-                                                                        <Form.Control name="review" as="textarea" value={textArea} onChange={(e) => { setTextArea(e.target.value) }} style={{ height: "220px" }} rows={3} />
-                                                                    </Form.Group>
 
-                                                                    <div className="d-flex">
-                                                                        <span className="libre-heading"> Rating &nbsp;</span>
-                                                                        <StarRating readOnly={false} starCount={updateStarValue} onRateChange={setUpdatedStarValue} />
-                                                                    </div>
+                                            <Dropdown>
+                                                <Dropdown.Toggle className="bg-transparent text-black"><BsThreeDots /></Dropdown.Toggle>
+                                                <Dropdown.Menu>
+                                                    {user._id === review.user._id && (<Dropdown.Item onClick={() => { handleEditContent(i) }}>Edit</Dropdown.Item>)}
+                                                    <Modal
+                                                        show={editModal}
+                                                        size="lg"
+                                                        aria-labelledby="contained-modal-title-vcenter"
+                                                        centered
+                                                        onHide={() => {
+                                                            setEditModal(false);
+                                                            setTextArea(null);
+                                                        }}
+                                                        className="p-0"
+                                                    >
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title className="libre-heading text-center flex-grow-1" id="contained-modal-title-vcenter">
+                                                                Give your collection a name
+                                                            </Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>
+                                                            <Form onSubmit={handleEdit}>
+                                                                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                                                    <Form.Label className="libre-heading"><FaPencilAlt />  Write</Form.Label>
+                                                                    <Form.Control name="review" as="textarea" value={textArea} onChange={(e) => { setTextArea(e.target.value) }} style={{ height: "220px" }} rows={3} />
+                                                                </Form.Group>
 
-                                                                    <Row className="justify-content-center align-items-center flex-column row-cols-3">
-                                                                        <Col ><Button type="submit" className="custom-btn border-0 w-100" onClick={() => setEditModal(false)}>Post</Button></Col>
-                                                                    </Row>
-                                                                </Form>
-                                                            </Modal.Body>
+                                                                <div className="d-flex">
+                                                                    <span className="libre-heading"> Rating &nbsp;</span>
+                                                                    <StarRating readOnly={false} starCount={updateStarValue} onRateChange={setUpdatedStarValue} />
+                                                                </div>
 
-                                                        </Modal>
-                                                        <Dropdown.Item onClick={() => { handleDelete(review._id) }}>Delete</Dropdown.Item>
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
-                                            )}
+                                                                <Row className="justify-content-center align-items-center flex-column row-cols-3">
+                                                                    <Col ><Button type="submit" className="custom-btn border-0 w-100" onClick={() => setEditModal(false)}>Post</Button></Col>
+                                                                </Row>
+                                                            </Form>
+                                                        </Modal.Body>
+
+                                                    </Modal>
+                                                    {user._id === review.user._id && (<Dropdown.Item onClick={() => { handleDelete(review._id) }}>Delete</Dropdown.Item>)}
+                                                    <Dropdown.Item className="text-danger " onClick={() => {
+                                                        setReportId(review._id)
+                                                        setBlur(true)
+                                                    }}>Report</Dropdown.Item>
+                                                    {reportId && (<ReportWindow reportedFor="review" show={reportId === review._id} itemId={reportId} onHide={() => {
+                                                        setReportId(null)
+                                                         setBlur(false)}} onSubmit={() => {
+                                                        setReportId(null)
+                                                         setBlur(false)}} />)}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+
                                             <span>{review.rating}/5</span>
                                             <div onClick={() => { handleLike(user._id, review._id) }}>{!isLiked ? (<IoHeartOutline size={20} />) : (<IoHeartSharp className="text-danger" size={20} />
                                             )}</div>
@@ -188,9 +200,9 @@ const ReviewModal = ({ show, onHide, bookId }) => {
 
                             </Card>
                             <Row className=" justify-content-end w-100">
-                                <Col className="col-9 p-0"><ReplyForm reviewId={review._id} setShow={setShowReplyFormID} commentShow={true} show={review._id == showReplyFormID} repliedTo={review.user._id}/></Col>
+                                <Col className="col-9 p-0"><ReplyForm blur={setBlur} reviewId={review._id} setShow={setShowReplyFormID} commentShow={true} show={review._id == showReplyFormID} repliedTo={review.user._id} /></Col>
                             </Row>
-                            
+
                         </Col>)
                     })}
                 </Row>

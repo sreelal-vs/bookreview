@@ -1,7 +1,7 @@
 .custom-toggle {
   padding: 2px 5px 2px 5px;
   border-radius: 10px !important;
-  
+
 
 }
 
@@ -15,8 +15,9 @@
 
 }
 
-.custom-btn {
-  height: 40px;
+.custom-btn,
+.custom-btn:disabled {
+  padding:8px 15px;
   justify-self: center;
   font-family: var(--heading);
   background-color: var(--accent);
@@ -61,9 +62,9 @@
   }
 
   .searchwrapper {
-    width: 100%;   
-    padding: inherit;   
-   
+    width: 100%;
+    padding: inherit;
+
     opacity: 0;
     transition: all .3s ease;
   }
@@ -101,14 +102,14 @@
   width: 100%;
   top: 120%;
   padding: inherit;
-  left: 0%; 
+  left: 0%;
   transform: translateY(-10px);
   opacity: 0;
   transition: all ease 0.3s;
 }
 
 .search-results.show {
-  
+
   position: absolute;
   border-radius: 5px;
   transform: translateY(0);
@@ -116,7 +117,8 @@
 
 
 }
-.searchwrapper{
+
+.searchwrapper {
   position: relative;
 }
 
@@ -134,6 +136,6 @@
 
 
 
-.dropdown-toggle::after{
+.dropdown-toggle::after {
   display: none !important;
 }

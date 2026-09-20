@@ -27,7 +27,7 @@ const reviewSchema = new mongoose.Schema({
             default:[]
 
         },
-        ishidden:{
+        isflagged:{
             type:Boolean,
             default:false
         },

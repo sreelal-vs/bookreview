@@ -252,3 +252,75 @@ exports.deleteReviewLike = async (req, res) => {
         })
     }
 }
+
+exports.getReportPreview = async (req, res) => {
+    try {     
+        
+        const {reviewId} = req.query
+
+        if (!reviewId) {
+            return res.status(400).json({
+                success: false,
+                message: "book id is needeed"
+            })
+        }
+        const preview = await Review.findOne({_id:reviewId}).populate(["book","user"])
+
+
+        if (!preview) {
+            return res.status(200).json({
+                success: true,
+                message: "No reviews for by this user",
+            })
+        } else {
+
+            return res.status(200).json({
+                success: true,
+                message: "review fetched successfully",
+                preview
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: true,
+            message: error.message
+        })
+    }
+}
+
+exports.getReportUsersReview = async (req, res) => {
+    try {     
+        
+        const {userId} = req.query
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "user id is needeed"
+            })
+        }
+        const reviews = await Review.find({user:userId}).populate(["book","user"])
+
+
+        if (!reviews) {
+            return res.status(200).json({
+                success: true,
+                message: "No reviews  by this user",
+            })
+        } else {
+
+            return res.status(200).json({
+                success: true,
+                message: "review fetched successfully",
+                reviews
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: true,
+            message: error.message
+        })
+    }
+}

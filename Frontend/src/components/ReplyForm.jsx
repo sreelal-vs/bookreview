@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 
 
-const ReplyForm = ({ show,setForm, reviewId,repliedTo,commentShow,repliedFor,hideReply}) => {
+const ReplyForm = ({ show,setForm, reviewId,repliedTo,commentShow,repliedFor,hideReply,blur}) => {
     const dispatch = useDispatch();
     const [showForm, setShowForm] = useState(setForm);
     
@@ -40,8 +40,7 @@ const ReplyForm = ({ show,setForm, reviewId,repliedTo,commentShow,repliedFor,hid
                     <div className="w-100 my-2" ><Button className="custom-btn border-0 h-50" onClick={()=>{setShowForm(prev=>!prev)}}><FaPencilAlt />  Write</Button></div>
                     )}
                     {commentShow&&(
-                    <div className="w-100 "><CommentComponent reviewId={reviewId} /></div>
-
+                    <div className="w-100 "><CommentComponent reviewId={reviewId} blur={blur}/></div>
                     )}
                 </div>
             )}

@@ -82,11 +82,11 @@ exports.addComment = async (req, res) => {
         })
     }
 }
-exports.EditComment  = async (req, res) => {
+exports.EditComment = async (req, res) => {
     try {
         const { commentId, content } = req.body;
         console.log();
-        
+
         if (!content) {
             return res.status(404).json({
                 successs: false,
@@ -100,14 +100,14 @@ exports.EditComment  = async (req, res) => {
             })
         }
         const comment = await Comment.findByIdAndUpdate(commentId, {
-            content:content,
+            content: content,
             isEdited: true
         }, { returnDocument: "after" });
 
         return res.status(200).json({
             successs: true,
             message: "successfuly edited the comment",
-            content:comment.content,
+            content: comment.content,
             commentId
         })
     } catch (error) {
@@ -121,7 +121,7 @@ exports.deleteComment = async (req, res) => {
     try {
         const { commentId } = req.query;
 
-        
+
         if (!commentId) {
             return res.status(200).json({
                 successs: true,
@@ -138,6 +138,86 @@ exports.deleteComment = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             successs: false,
+            message: error.message
+        })
+    }
+}
+
+exports.getCommentPreview = async (req, res) => {
+    try {
+
+        const { commentId } = req.query
+
+        if (!commentId) {
+            return res.status(400).json({
+                success: false,
+                message: "comment id is needeed"
+            })
+        }
+        const preview = await Comment.findOne({ _id: commentId }).populate(["review", "user", "repliedFor", "repliedTo"])
+
+
+
+        if (!preview) {
+            return res.status(200).json({
+                success: true,
+                message: "No comment like this",
+            })
+        } else {
+
+            return res.status(200).json({
+                success: true,
+                message: "comment fetched successfully",
+                preview
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: true,
+            message: error.message
+        })
+    }
+}
+
+exports.getReportUserComments = async (req, res) => {
+    try {
+
+        const { userId } = req.query
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "user id is needeed"
+            })
+        } 
+        const comments = await Comment.find({ user: userId }).populate([{
+            path: "review",
+            populate: {
+                path: "book"
+            }
+        },{path:"user"},{path:"repliedFor",populate:[{
+            path:"user"
+        },{path:"repliedTo"}]},{path:"repliedTo"}])
+
+
+        if (!comments) {
+            return res.status(200).json({
+                success: true,
+                message: "No reviews  by this user",
+            })
+        } else {
+
+            return res.status(200).json({
+                success: true,
+                message: "comments fetched successfully",
+                comments
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: true,
             message: error.message
         })
     }

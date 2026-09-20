@@ -6,6 +6,8 @@ import collectionReducer from "./bookCollectionSlice"
 import readingStatus from "./readingListSlice"
 import reviewReducer from "./reviewSlice"
 import commentReducer from "./commentSlice"
+import reportReducer from "./reportsSlice"
+
 
 
 
@@ -19,7 +21,8 @@ export const store = configureStore({
         collection:collectionReducer,
         Library:readingStatus,
         review:reviewReducer,
-        comment:commentReducer
+        comment:commentReducer,
+        reports:reportReducer
     }
 })
 

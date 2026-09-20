@@ -105,7 +105,7 @@ exports.userLogin = async (req, res) => {
             name: user.name,
             email: user.email,
             profilePic: user.profilePic ?? null,
-            role:user.role
+            role: user.role
         }
         const token = jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
 
@@ -174,25 +174,25 @@ exports.getCurrentUser = async (req, res) => {
 }
 exports.editUser = async (req, res) => {
     try {
-        const { fullname ,prevPic} = req.body;
-        const {userId} = req.userData;
+        const { fullname, prevPic } = req.body;
+        const { userId } = req.userData;
         const profilePic = req.file?.filename;
-        const filePath = path.join(__dirname,"..","Uploads",prevPic);
-        await fs.unlink(filePath,((err)=>{
-            if(err){
+        const filePath = path.join(__dirname, "..", "Uploads", prevPic);
+        await fs.unlink(filePath, ((err) => {
+            if (err) {
                 console.error(err);
             }
         }))
 
-        const updatedUser = await User.findByIdAndUpdate(userId,{
-            name:fullname,
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            name: fullname,
             profilePic,
-        },{returnDocument:"after"});
+        }, { returnDocument: "after" });
 
         res.status(200).json({
             success: true,
             error: "user updated successfully",
-            user:updatedUser
+            user: updatedUser
         })
     } catch (error) {
         res.status(500).json({
@@ -203,13 +203,73 @@ exports.editUser = async (req, res) => {
 
 
 }
-exports.deletePrevPFP = async ( req,res)=>{
+exports.deletePrevPFP = async (req, res) => {
     try {
         console.log(req.body)
     } catch (error) {
         res.status(500).json({
             success: false,
             error: error.message
+        })
+    }
+}
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({});
+        return res.status(200).json({
+            success: true,
+            message: "successfully fetched",
+            users
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+exports.updateUserRole = async (req, res) => {
+    try {
+        const { role, userId } = req.body;
+
+        const users = await User.findByIdAndUpdate(userId, {
+            role
+        })
+        return res.status(200).json({
+            success: true,
+            message: "successfully updated the role",
+            role,
+            userId
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+exports.passwordChange = async (req, res) => {
+    try {
+        const { prevPassword, password } = req.body;
+        const { userId } = req.useData;
+
+        const user = await User.findOne({ _id: userId });
+
+
+        console.log(user);
+
+        return res.status(200).json({
+            success: true,
+            message: "successfully updated the password",
+
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
         })
     }
 }

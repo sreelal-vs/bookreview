@@ -142,7 +142,6 @@ const Discovery = () => {
 
     const [reviewingBookId, setReviewingBookId] = useState(null);
 
-
     return (
         <div className="flex-grow-1 d-flex justify-content-center my-5">
             <div className="section-size px-3 px-sm-5 px-lg-0">
@@ -210,7 +209,7 @@ const Discovery = () => {
                                             <Row>
                                                 <Col className="heading pe-0 flex-grow-0 mx-1">
                                                     <div onClick={() => { setReviewingBookId(book._id) }} className="review-btn px-1 mt-1 d-flex justify-content-between align-items-center"><LiaCommentsSolid /><span>Reviews</span></div>
-                                                    <ReviewModal bookId={book._id} show={reviewingBookId === book._id}  onHide={() => { setReviewingBookId(null) }} />
+                                                    <ReviewModal bookId={book._id} show={reviewingBookId === book._id}   onHide={() => { setReviewingBookId(null) }} />
                                                 </Col>
                                                 <Col className="p-0 flex-wrap-1">
                                                     <StarRating readOnly={true} starCount={book.avgrating} />

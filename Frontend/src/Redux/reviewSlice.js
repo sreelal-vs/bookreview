@@ -5,6 +5,7 @@ import instance from "../api/axios";
 
 const initialState = {
     reviews: [],
+    reportPreview:null,
     loading: false,
     error: null,
 }
@@ -142,6 +143,24 @@ export const userReviewsThunk = createAsyncThunk(
         }
     }
 )
+export const reportUserReviewsThunk = createAsyncThunk(
+    "get/all/report-user/review",
+    async ({userId}, { rejectWithValue }) => {
+        try {
+            
+            const { data } = await instance.get("review/report-user/reviews", {
+                params:{userId},
+                withCredentials: true
+            })
+
+            return data;
+        } catch (error) {
+
+            return rejectWithValue(error?.response?.data || "Failed to  get the reviews")
+        }
+    }
+)
+
 const reviewSlice = createSlice({
     name: "review",
     initialState,
@@ -238,7 +257,18 @@ const reviewSlice = createSlice({
         }).addCase(userReviewsThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
+        }).addCase(reportUserReviewsThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(reportUserReviewsThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.reviews = action.payload.reviews;
+        }).addCase(reportUserReviewsThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
         })
+    
     }
 
 })
