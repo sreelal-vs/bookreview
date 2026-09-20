@@ -14,8 +14,8 @@ import defaultPic from "../assets/defaultcover.png"
 import defaultUser from "../assets/defaultPic.jpg"
 import { Formik } from "formik";
 import * as yup from "yup"
-import { useNavigate } from "react-router-dom";
-import { userEditThunk } from "../Redux/userSlice";
+
+import { passwordChangeThunk, userEditThunk } from "../Redux/userSlice";
 import { truncateText } from "../assets/assetsFunction";
 const Profile = () => {
     const { user } = useSelector(state => state.auth);
@@ -111,12 +111,22 @@ const Profile = () => {
             .notOneOf([yup.ref("prevPassword")],"New password must be different"),
         confirmPassword: yup
             .string()
-            .oneOf([yup.ref("password"),"Password is not matching"])
+            .oneOf([yup.ref("password")],"Password is not matching")
             .notOneOf([yup.ref("prevPassword")],"New password must be different")
             .required("Confirm your new password"),
     });
-    const handlePasswordChange = (values) => {
-        console.log(values);
+    const handlePasswordChange = (values,{resetForm,setFieldError}) => {
+        
+            dispatch(passwordChangeThunk({prevPassword:values.prevPassword,password:values.password})).unwrap().then(()=>{
+                resetForm();
+            }).catch((data)=>{
+                if(data.field){
+                    setFieldError(data.field,data.message)
+                }
+            })
+            setTab("profile")
+
+        
     }
     return (
         <div className="flex-grow-1 d-flex justify-content-center">
@@ -344,7 +354,7 @@ const Profile = () => {
                                             confirmPassword: ""
                                         }}
                                     >
-                                        {({ handleSubmit, handleChange, values, touched, errors,setFieldError}) => (
+                                        {({ handleSubmit, handleChange, values, touched, errors}) => (
                                             <Form noValidate onSubmit={handleSubmit}>
                                                 <Row className="mb-3 justify-content-center">
 

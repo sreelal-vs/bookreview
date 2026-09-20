@@ -69,7 +69,7 @@ export const passwordChangeThunk = createAsyncThunk(
    "user/password/update",
     async ({prevPassword,password},{ rejectWithValue })=>{
         try {
-            const {data} = await instance.patch('user/role',{prevPassword,password},{
+            const {data} = await instance.patch('user/password/change',{prevPassword,password},{
                 withCredentials:true
             });
             return data
@@ -114,6 +114,15 @@ const userSlice = createSlice({
                 user.role = role
             }
         }).addCase(updateRole.rejected,(state,actions)=>{
+            state.loading = true;
+            state.error = actions.payload;
+        }).addCase(passwordChangeThunk.pending,(state)=>{
+            state.loading = true;
+            state.error = null;
+        }).addCase(passwordChangeThunk.fulfilled,(state)=>{
+            state.loading = false;
+            state.error=null
+        }).addCase(passwordChangeThunk.rejected,(state,actions)=>{
             state.loading = true;
             state.error = actions.payload;
         })

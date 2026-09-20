@@ -253,13 +253,22 @@ exports.updateUserRole = async (req, res) => {
 
 exports.passwordChange = async (req, res) => {
     try {
+
         const { prevPassword, password } = req.body;
-        const { userId } = req.useData;
-
-        const user = await User.findOne({ _id: userId });
+        const { userId } = req.userData;
 
 
-        console.log(user);
+        const user = await User.findOne({ _id: userId }).select("+password");
+        const isPassword = await bcrypt.compare(prevPassword, user.password)
+        if (!isPassword) {
+            return res.status(400).json({
+                success: false,
+                field: "prevPassword",
+                message: "Wrong Password",
+            })
+        }
+        user.password = password;
+        await user.save()
 
         return res.status(200).json({
             success: true,
