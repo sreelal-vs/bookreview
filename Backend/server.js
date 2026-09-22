@@ -7,7 +7,7 @@ const Book = require("./models/bookModel")
 
 
 dotenv.config();
-const port = process.env._PORT;
+const port = process.env.PORT;
 
 
 async function dbconnect() {
