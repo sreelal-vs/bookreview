@@ -8,6 +8,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import ReplyForm from "./ReplyForm";
 import EditReplyForm from "./EditReplyForm";
 import ReportWindow from "./ReportWindow";
+import defaultUser from "../assets/defaultPic.jpg"
 
 const CommentComponent = ({ reviewId,blur=null }) => {
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const CommentComponent = ({ reviewId,blur=null }) => {
                     <div>
                         <Row >
                             <Col className=" p-0 col-2 p-0 d-flex justify-content-center">
-                                <Image src={comment.user?.profilePic ? `http://localhost:5000/${comment.user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="50px" width="50px" roundedCircle />
+                                <Image src={comment.user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${comment.user.profilePic}` : (defaultUser)} height="50px" width="50px" roundedCircle />
                             </Col>
                             <Col className=" d-flex justify-content-center flex-column col-8">
                                 <p className="m-0">

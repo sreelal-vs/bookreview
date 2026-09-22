@@ -10,6 +10,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import ReplyForm from "./ReplyForm";
 import ReportWindow from "./ReportWindow";
+import defaultUser from "../assets/defaultPic.jpg"
 
 
 
@@ -120,7 +121,7 @@ const ReviewModal = ({ show, onHide, bookId }) => {
                                 <div>
                                     <Row>
                                         <Col className="flex-grow-0 p-0">
-                                            <Image src={review.user?.profilePic ? `http://localhost:5000/${review.user.profilePic}` : `http://localhost:5000/Uploads/defaultPic.jpg`} height="70px" width="70px" roundedCircle />
+                                            <Image src={review.user.profilePic ? `${import.meta.env.VITE_BASEURL}/Uploads/${review.user.profilePic}` : (defaultUser)} height="70px" width="70px" roundedCircle />
 
                                         </Col>
                                         <Col className="flex-grow-1 d-flex justify-content-center flex-column">

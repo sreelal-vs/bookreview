@@ -206,12 +206,12 @@ const Discovery = () => {
                                         <Card.Title className="libre-heading">{truncateText(book.title, 20)}</Card.Title>
                                         <Card.Subtitle className="mt-1 text-black-50">{book.author}</Card.Subtitle>
                                         {isAuthenticated && (
-                                            <Row>
-                                                <Col className="heading pe-0 flex-grow-0 mx-1">
-                                                    <div onClick={() => { setReviewingBookId(book._id) }} className="review-btn px-1 mt-1 d-flex justify-content-between align-items-center"><LiaCommentsSolid /><span>Reviews</span></div>
+                                            <Row className=" flex-column flex-lg-row my-3 my-sm-2">
+                                                <Col className="heading pe-0 flex-grow-0 mx-1 ">
+                                                    <div onClick={() => { setReviewingBookId(book._id) }} className="review-btn px-1 mt-1 d-flex  justify-content-sm-between align-items-center"><LiaCommentsSolid />&nbsp;&nbsp;<span>Reviews</span></div>
                                                     <ReviewModal bookId={book._id} show={reviewingBookId === book._id}   onHide={() => { setReviewingBookId(null) }} />
                                                 </Col>
-                                                <Col className="p-0 flex-wrap-1">
+                                                <Col className="p-0 flex-wrap-1 ps-3">
                                                     <StarRating readOnly={true} starCount={book.avgrating} />
                                                 </Col>
                                             </Row>

@@ -3,6 +3,9 @@
     .card-img{
         height: 15rem !important;
     }
+    .card-title{
+    height: 100px !important;
+}
 }
 .card{
     background-color: var(--bg);
@@ -44,6 +47,7 @@
 .card-subtitle{
     height: 20px;
     font-size: 12px;
+    margin-bottom: 10px;
 }
 .loading{
     height: 700px;

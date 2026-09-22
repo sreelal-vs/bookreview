@@ -84,8 +84,13 @@ function Header() {
                                                     <h5>Hi,{user.name.charAt(0).toUpperCase() + user.name.slice(1)}!</h5>
                                                 </div>
                                                 <ListGroup className="pt-4">
+                                                    <ListGroup.Item className="d-none d-md-block d-d-lg-none" onClick={() => { navigate('/library') }}>Library</ListGroup.Item>
+                                                    <ListGroup.Item className="d-none d-md-block d-d-lg-none" onClick={() => { navigate('/profile') }}>Profile</ListGroup.Item>
 
-                                                    <ListGroup.Item>Manage account</ListGroup.Item>
+                                                    {user.role === "admin" && (
+                                                        <ListGroup.Item >Admin dashboard</ListGroup.Item>
+
+                                                    )}
                                                     <ListGroup.Item onClick={handleLogout}>Logout</ListGroup.Item>
 
                                                 </ListGroup>
@@ -126,12 +131,10 @@ function Header() {
                                             <p className="text-muted small">{user.email}</p>
                                         </div>
                                         <DropdownDivider />
-                                        <Dropdown.Item>Manage account</Dropdown.Item>
                                         <Dropdown.Item onClick={() => { navigate('/library') }}>Library</Dropdown.Item>
                                         <Dropdown.Item onClick={() => { navigate('/profile') }}>Profile</Dropdown.Item>
                                         {user.role === "admin" && (
                                             <Dropdown.Item onClick={() => { navigate('/admin-dashboard') }}>Admin Dashboard</Dropdown.Item>
-
                                         )}
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
 

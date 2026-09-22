@@ -19,7 +19,9 @@ const Signin = () => {
         dispatch(userLoginThunk(values)).unwrap().then(()=>{    
             navigate('/')             
         }).catch((data)=>{  
-                    
+            if(data.reason === "banned")   {
+                navigate("/banned-page")
+            }     
             setFieldError(data.field,data.message)         
         })
            

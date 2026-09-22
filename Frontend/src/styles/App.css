@@ -41,7 +41,9 @@
     .star-active {
         font-size: 13px;
     }
-
+    .profile-nav-wrap{
+    width: 100%;
+}
     .collection-name {
         font-size: 90px !important;
     }
@@ -56,7 +58,9 @@
     .collection-name {
         font-size: 40px !important;
     }
-
+    .profile-nav{
+        font-size: 12px;
+    }
     .commment-time {
         font-size: 10px;
     }

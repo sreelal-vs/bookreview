@@ -18,6 +18,7 @@ import FavouriteBooks from './pages/FavouriteBooks';
 import ActiveCollection from './components/ActiveCollection';
 import ProtectedRoute from './assets/ProtectedRoute';
 import Admindashboard from './pages/Admindashboard';
+import Bannedpage from './pages/Bannedpage';
 
 
 
@@ -44,6 +45,8 @@ function App() {
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/library' element={<Library/>}/>
           <Route path='/favourites' element={<FavouriteBooks/>}/>
+          <Route path='/banned-page' element={<Bannedpage/>}/>
+
           <Route path='/current-collection/:id' element={<ActiveCollection/>}/>
           <Route path='/admin-dashboard' element={
             <ProtectedRoute adminOnly={true}>

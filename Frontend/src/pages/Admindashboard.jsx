@@ -217,7 +217,7 @@ const Admindashboard = () => {
                                                 <Tab eventKey="comments" title="Comments">
                                                     <Tabs defaultActiveKey="unresolved">
                                                         <Tab eventKey="unresolved" title="unresolved">
-                                                            {commentReports.map(report => {
+                                                            {commentReports?.map(report => {
                                                                 if (report.status === "unresolved") {
                                                                     return <div key={report._id} className="mb-2  ">
                                                                         <Row className="bg-secondary-subtle rounded-top p-3 mt-1">
@@ -256,7 +256,7 @@ const Admindashboard = () => {
                                                             })}
                                                         </Tab>
                                                         <Tab eventKey="resolved" title="resolved">
-                                                            {commentReports.map(report => {
+                                                            {commentReports?.map(report => {
                                                                 if (report.status === "resolved") {
                                                                     return <div key={report._id} className="mb-2  ">
                                                                         <Row className="bg-secondary-subtle rounded-top p-3 mt-1">
@@ -290,7 +290,7 @@ const Admindashboard = () => {
                                                             })}
                                                         </Tab>
                                                         <Tab eventKey="rejected" title="rejected">
-                                                            {commentReports.map(report => {
+                                                            {commentReports?.map(report => {
                                                                 if (report.status === "rejected") {
                                                                     return <div key={report._id} className="mb-2  ">
                                                                         <Row className="bg-secondary-subtle rounded-top p-3 mt-1">

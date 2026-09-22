@@ -86,7 +86,13 @@ exports.userLogin = async (req, res) => {
                 message: "email does not exists"
             })
         }
-
+        if(user.isBanned){
+             return res.status(400).json({
+                success: false,
+                reason: "banned",
+                message: "User is Banned"
+            })
+        }
         const isPassword = await bcrypt.compare(password, user.password);
         if (!isPassword) {
             return res.status(401).json({

@@ -132,9 +132,9 @@ const Profile = () => {
         <div className="flex-grow-1 d-flex justify-content-center">
             {user && (
                 <TabContainer activeKey={tab}>
-                    <Row className="section-size px-3 px-xxl-0 ">
-                        <Col className="col-lg-3 col-sm-2 col-3">
-                            <Nav className="d-flex flex-column pt-5 libre-heading fw-semibold" variant="underline">
+                    <Row className="section-size px-3 px-xxl-0 flex-column flex-md-row">
+                        <Col className="col-lg-3 col-sm-2 col-3 profile-nav-wrap">
+                            <Nav className="d-flex flex-row flex-md-column pt-5 libre-heading fw-semibold profile-nav" variant="underline">
                                 <Nav.Item >
                                     <Nav.Link eventKey="profile" onClick={() => { setTab("profile") }}>Profile</Nav.Link>
                                 </Nav.Item>
@@ -168,7 +168,7 @@ const Profile = () => {
                                                     <span >BOOKS READ</span>
                                                 </div>
                                                 <div className="d-flex flex-column">
-                                                    <span className="text-center fs-2">{reviews.length}</span>
+                                                    <span className="text-center fs-2">{reviews?.length}</span>
                                                     <span>REVIEWS</span>
                                                 </div>
                                             </div>
@@ -181,7 +181,7 @@ const Profile = () => {
                                                 defaultActiveKey="reviews"
                                             >
                                                 <Tab eventKey="reviews" title="Reviews">
-                                                    {reviews.map((review, i) => {
+                                                    {reviews?.map((review, i) => {
                                                         const isLiked = review?.likes.some(id => String(id) === String(user._id)) || false;
 
                                                         return <Card key={review._id} className="bottomborder w-100 p-3 my-2">
