@@ -9,10 +9,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const collectionRoute = require("./Routes/collectionRoute")
 
-
+const Allowedorigin = ["https://bookreview-xi.vercel.app/","http://localhost:5173"]
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin:Allowedorigin,   
     credentials: true
 }));
 app.use('/Uploads',express.static("Uploads"));
