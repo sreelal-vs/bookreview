@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const Collections = require("../models/collectionModel");
 const path = require("path");
-const fs = require("fs")
+const fs = require("fs");
+const { none } = require("../middlewares/fileuploader");
 exports.userRegister = async (req, res) => {
     try {
         const { fullname, email, password } = req.body;
@@ -117,6 +118,8 @@ exports.userLogin = async (req, res) => {
 
         res.status(200).cookie("token", token, {
             httpOnly: true,
+            sameSite:"none",
+            secure:true,
             maxAge: 24 * 60 * 60 * 1000
         }).json({
             success: true,
