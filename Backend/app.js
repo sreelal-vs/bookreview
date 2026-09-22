@@ -9,7 +9,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const collectionRoute = require("./Routes/collectionRoute")
 
-const Allowedorigin = ["https://bookreview-xi.vercel.app","http://localhost:5173"]
+const Allowedorigin = ["https://bookreview-xi.vercel.app","http://localhost:5173"];
+const app = express();
 app.use(cors({
     origin:function(origin,callback){
         if(!origin||Allowedorigin.includes(origin)){
@@ -20,7 +21,7 @@ app.use(cors({
     },   
     credentials: true
 }));
-const app = express();
+
 
 app.use('/Uploads',express.static("Uploads"));
 app.use(cookieParser())
