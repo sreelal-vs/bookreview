@@ -2,7 +2,7 @@ const express = require("express");
 const app = require("./app");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose")
-const Book = require("./models/bookModel")
+
 
 
 
@@ -12,7 +12,7 @@ const port = process.env.PORT;
 
 async function dbconnect() {
     try {
-        await mongoose.connect(process.env.DB_URL)
+        await mongoose.connect(process.env.MONGO_URI)
         console.log("Database connected")
         
 
