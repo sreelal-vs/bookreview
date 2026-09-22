@@ -9,12 +9,19 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const collectionRoute = require("./Routes/collectionRoute")
 
-const Allowedorigin = ["https://bookreview-xi.vercel.app/","http://localhost:5173"]
-const app = express();
+const Allowedorigin = ["https://bookreview-xi.vercel.app","http://localhost:5173"]
 app.use(cors({
-    origin:Allowedorigin,   
+    origin:function(origin,callback){
+        if(!origin||Allowedorigin.includes(origin)){
+            callback(null,true);
+        }else{
+            callback(new Error("Cors is blocked"))
+        }
+    },   
     credentials: true
 }));
+const app = express();
+
 app.use('/Uploads',express.static("Uploads"));
 app.use(cookieParser())
 app.use(express.json());
